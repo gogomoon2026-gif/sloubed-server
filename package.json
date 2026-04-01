@@ -1,0 +1,13 @@
+{
+  "name": "sloubed-product-guide",
+  "version": "1.0.0",
+  "description": "SLOUBED 제품가이드 대시보드",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

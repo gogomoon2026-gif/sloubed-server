@@ -1,0 +1,156 @@
+[
+  {
+    "product_id": "preset_moonray",
+    "name_ko": "이브닝 문레이",
+    "name_en": "MOON RAY",
+    "changed_at": "2026-03-26T17:01:43.520Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_sunrise",
+    "name_ko": "트와일라잇 선라이즈",
+    "name_en": "SUNRISE",
+    "changed_at": "2026-03-26T17:01:42.319Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_sunset",
+    "name_ko": "트와일라잇 선셋",
+    "name_en": "SUNSET",
+    "changed_at": "2026-03-26T17:01:39.931Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_fullmoon",
+    "name_ko": "미드나잇 풀문",
+    "name_en": "FULL MOON",
+    "changed_at": "2026-03-26T17:01:38.382Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_newmoon",
+    "name_ko": "미드나잇 뉴문",
+    "name_en": "NEW MOON",
+    "changed_at": "2026-03-26T17:01:36.960Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_starlit",
+    "name_ko": "스타릿",
+    "name_en": "STARLIT",
+    "changed_at": "2026-03-26T17:01:35.509Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "preset_evening",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T17:01:34.094Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "preset_halfmoon",
+    "name_ko": "미드나잇 하프문",
+    "name_en": "HALF MOON",
+    "changed_at": "2026-03-26T17:01:30.274Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "preset_evening",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T16:55:52.664Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "preset_starlit",
+    "name_ko": "스타릿",
+    "name_en": "STARLIT",
+    "changed_at": "2026-03-26T16:42:26.764Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_evening",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T16:42:25.443Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "preset_halfmoon",
+    "name_ko": "미드나잇 하프문",
+    "name_en": "HALF MOON",
+    "changed_at": "2026-03-26T16:42:24.092Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T16:41:59.157Z",
+    "change_type": "DELETE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:52:13.081Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn7l300q1m3yk",
+    "name_ko": "이브닝 매트리스ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:50:42.302Z",
+    "change_type": "DELETE"
+  },
+  {
+    "product_id": "mn7l300q1m3yk",
+    "name_ko": "이브닝 매트리스ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:44:39.016Z",
+    "change_type": "CREATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:44:35.700Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:40:45.770Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:38:41.854Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:12:04.359Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:10:37.304Z",
+    "change_type": "UPDATE"
+  },
+  {
+    "product_id": "mn78l8giogk9g",
+    "name_ko": "이브닝 매트리스",
+    "name_en": "EVENING",
+    "changed_at": "2026-03-26T14:09:31.977Z",
+    "change_type": "CREATE"
+  }
+]

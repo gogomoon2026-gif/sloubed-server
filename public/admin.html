@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLOUBED — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--black:#111;--white:#fff;--g1:#f5f5f5;--g2:#e8e8e8;--g3:#d0d0d0;--g4:#999;--g5:#555;--r:100px;--cr:18px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:#fafafa;color:#111;font-size:14px;min-height:100vh}
+::-webkit-scrollbar{width:0}
+
+.hd{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--g2);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.logo{font-size:16px;font-weight:900;letter-spacing:.1em}
+.logo-tag{font-size:11px;font-weight:700;color:var(--g4);margin-left:8px;background:var(--g1);padding:3px 10px;border-radius:var(--r);border:1px solid var(--g2)}
+.back{padding:7px 14px;border-radius:var(--r);background:#111;color:#fff;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s}
+.back:hover{background:#333}
+
+.main{padding:80px 28px 60px}
+.pg-title{font-size:28px;font-weight:900;letter-spacing:-.03em;margin-bottom:4px}
+.pg-desc{font-size:13px;color:var(--g4);margin-bottom:24px}
+
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+
+.pcard{background:#fff;border-radius:var(--cr);border:1.5px solid var(--g2);overflow:hidden;transition:box-shadow .2s}
+.pcard:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.pc-head{background:#111;padding:16px 18px}
+.pc-series{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.pc-name{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.pc-en{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.pc-body{padding:14px}
+
+.slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.slot-wrap{}
+.slot-lbl{font-size:9px;font-weight:700;color:var(--g4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.slot{border-radius:12px;overflow:hidden;border:1.5px solid var(--g2);cursor:pointer;transition:all .2s;position:relative;background:var(--g1);min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.slot:hover{border-color:#111;background:var(--g2)}
+.slot.filled{background:#000}
+.slot.filled img{width:100%;height:90px;object-fit:cover;display:block}
+.slot-ico{font-size:22px;opacity:.2}
+.slot-txt{font-size:11px;color:var(--g4);font-weight:600}
+.slot-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;gap:6px}
+.slot.filled:hover .slot-overlay{display:flex}
+.ov-btn{padding:5px 11px;border-radius:var(--r);font-size:11px;font-weight:800;cursor:pointer;border:none;font-family:'Noto Sans KR',sans-serif;transition:all .15s}
+.ov-change{background:#fff;color:#111}
+.ov-change:hover{background:#eee}
+.ov-del{background:rgba(255,60,60,.8);color:#fff}
+.ov-del:hover{background:rgba(255,60,60,1)}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#111;color:#fff;padding:11px 22px;border-radius:var(--r);font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:500;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.empty-state{padding:40px;text-align:center;color:var(--g4);font-size:13px;line-height:2}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div style="display:flex;align-items:center">
+    <div class="logo">SLOUBED</div>
+    <span class="logo-tag">ADMIN</span>
+  </div>
+  <a href="/" class="back">← 대시보드</a>
+</header>
+
+<div class="main">
+  <div class="pg-title">이미지 관리</div>
+  <div class="pg-desc">슬롯을 클릭해서 이미지를 업로드하세요 — 업로드 즉시 대시보드에 반영됩니다</div>
+  <div class="pgrid" id="grid">
+    <div class="empty-state">불러오는 중...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = (location.hostname==='localhost'||location.hostname==='127.0.0.1'
+  ? 'http://localhost:3000'
+  : 'https://sloubed-guide.up.railway.app') + '/api';
+
+const SLOTS = [
+  {key:'main',        label:'정면'},
+  {key:'side',        label:'측면'},
+  {key:'crossSection',label:'단면도'},
+  {key:'cover',       label:'커버'},
+];
+
+let DATA = {};
+
+async function load(){
+  try {
+    const r = await fetch(API+'/products');
+    const d = await r.json();
+    if (!d.ok) throw 0;
+    DATA = d.products || {};
+    render();
+  } catch {
+    document.getElementById('grid').innerHTML =
+      '<div class="empty-state" style="color:#c00">서버 연결 실패<br>CMD에서 node server.js 실행 확인</div>';
+  }
+}
+
+function render(){
+  const ps = Object.values(DATA);
+  if (!ps.length) {
+    document.getElementById('grid').innerHTML =
+      '<div class="empty-state">등록된 제품 없음<br>피그마에서 저장 버튼을 눌러주세요</div>';
+    return;
+  }
+  document.getElementById('grid').innerHTML = ps.map(p => {
+    const imgs = p.images || {};
+    const slotsHtml = SLOTS.map(s => {
+      const src = imgs[s.key];
+      return `<div class="slot-wrap">
+        <div class="slot-lbl">${s.label}</div>
+        ${src
+          ? `<div class="slot filled" onclick="upload('${p.id}','${s.key}')">
+               <img src="${src}">
+               <div class="slot-overlay">
+                 <button class="ov-btn ov-change" onclick="event.stopPropagation();upload('${p.id}','${s.key}')">변경</button>
+                 <button class="ov-btn ov-del" onclick="event.stopPropagation();del('${p.id}','${s.key}')">삭제</button>
+               </div>
+             </div>`
+          : `<div class="slot" onclick="upload('${p.id}','${s.key}')">
+               <div class="slot-ico">＋</div>
+               <div class="slot-txt">업로드</div>
+             </div>`
+        }
+      </div>`;
+    }).join('');
+
+    return `<div class="pcard">
+      <div class="pc-head">
+        <div class="pc-series">— ${p.seriesKo||p.seriesEn||''}</div>
+        <div class="pc-name">${p.nameKo||p.name||'—'}</div>
+        <div class="pc-en">${p.nameEn||''}</div>
+      </div>
+      <div class="pc-body">
+        <div class="slot-grid">${slotsHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function upload(id, slot){
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 3*1024*1024) { showToast('3MB 이하 이미지만 가능합니다'); return; }
+    showToast('업로드 중...');
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      try {
+        const r = await fetch(`${API}/products/${id}/image`, {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({slot, base64: ev.target.result})
+        });
+        const d = await r.json();
+        if (d.ok) { await load(); showToast('✓ 업로드 완료!'); }
+        else showToast('업로드 실패');
+      } catch { showToast('서버 오류'); }
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+async function del(id, slot){
+  if (!confirm('이미지를 삭제할까요?')) return;
+  try {
+    const r = await fetch(`${API}/products/${id}/image`, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({slot, base64: null})
+    });
+    const d = await r.json();
+    if (d.ok) { await load(); showToast('삭제 완료'); }
+  } catch { showToast('삭제 실패'); }
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+load();
+</script>
+</body>
+</html>

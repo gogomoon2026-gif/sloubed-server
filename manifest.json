@@ -1,0 +1,16 @@
+{
+  "name": "SLOUBED 제품 가이드 생성기",
+  "id": "sloubed-guide-generator-v3",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "http://localhost:3000",
+      "https://sloubed-guide.up.railway.app"
+    ],
+    "reasoning": "SLOUBED 제품 정보를 로컬 서버 및 Railway 배포 서버와 동기화하기 위해 필요합니다."
+  }
+}
