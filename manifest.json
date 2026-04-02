@@ -9,8 +9,8 @@
   "networkAccess": {
     "allowedDomains": [
       "http://localhost:3000",
-      "https://sloubed-guide.up.railway.app"
+      "https://sloubed-server-production.up.railway.app"
     ],
-    "reasoning": "SLOUBED 제품 정보를 로컬 서버 및 Railway 배포 서버와 동기화하기 위해 필요합니다."
+    "reasoning": "SLOUBED 제품 정보를 서버와 동기화하기 위해 필요합니다."
   }
 }
