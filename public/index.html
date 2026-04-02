@@ -608,7 +608,27 @@ function renderNotif(){
   const items=CL.slice(0,10);
   document.getElementById('ndot').style.display=items.length?'block':'none';
   document.getElementById('nitems').innerHTML=items.length
-    ?items.map(c=>`<div class="nit"><div class="nid" style="background:${c.type==='new'?'#111':'#999'}"></div><div><div class="nit2">${c.product||''} — ${c.content||''}</div><div class="nid2">${c.date||''}</div></div></div>`).join('')
+    ?items.map(c=>{
+      const isNew=c.change_type==='CREATE'||c.type==='new';
+      const isUpdate=c.change_type==='UPDATE'||c.type==='updated';
+      const isDel=c.change_type==='DELETE';
+      const color=isNew?'#111':isDel?'#c00':'#999';
+      const badge=isNew?'🆕 신규 등록':isDel?'🗑 삭제':' ✏️ 업데이트';
+      const name=c.name_ko||c.product||'—';
+      const nameEn=c.name_en?` (${c.name_en})`:'';
+      const date=c.changed_at||c.date||'';
+      const dateStr=date?new Date(date).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+      return `<div class="nit">
+        <div class="nid" style="background:${color}"></div>
+        <div>
+          <div class="nit2">${name}${nameEn}</div>
+          <div class="nid2" style="display:flex;gap:6px;align-items:center">
+            <span style="font-weight:700;color:${color}">${badge}</span>
+            <span>${dateStr}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('')
     :'<div class="nemp">업데이트 없음</div>';
 }
 function toggleNotif(){document.getElementById('npanel').classList.toggle('open');}
