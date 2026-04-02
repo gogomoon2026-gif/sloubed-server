@@ -11,18 +11,32 @@
 body{font-family:'Noto Sans KR',sans-serif;background:#fafafa;color:#111;font-size:14px;min-height:100vh}
 ::-webkit-scrollbar{width:0}
 
+/* 로그인 화면 */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111}
+.login-box{background:#fff;border-radius:24px;padding:40px 36px;width:340px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{font-size:20px;font-weight:900;letter-spacing:.1em;margin-bottom:4px}
+.login-sub{font-size:12px;color:var(--g4);margin-bottom:28px}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:11px;font-weight:700;color:var(--g4);margin-bottom:6px;letter-spacing:.05em;text-transform:uppercase}
+.login-field input{width:100%;padding:12px 14px;border:1.5px solid var(--g2);border-radius:12px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:#111}
+.login-btn{width:100%;padding:13px;border-radius:12px;background:#111;color:#fff;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:all .2s}
+.login-btn:hover{background:#333}
+.login-err{color:#c00;font-size:12px;text-align:center;margin-top:10px;min-height:18px}
+
 .hd{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--g2);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
 .logo{font-size:16px;font-weight:900;letter-spacing:.1em}
 .logo-tag{font-size:11px;font-weight:700;color:var(--g4);margin-left:8px;background:var(--g1);padding:3px 10px;border-radius:var(--r);border:1px solid var(--g2)}
+.hd-right{display:flex;align-items:center;gap:10px}
+.logout-btn{padding:6px 14px;border-radius:var(--r);background:var(--g1);border:1.5px solid var(--g2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s}
+.logout-btn:hover{background:var(--g2)}
 .back{padding:7px 14px;border-radius:var(--r);background:#111;color:#fff;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s}
 .back:hover{background:#333}
 
 .main{padding:80px 28px 60px}
 .pg-title{font-size:28px;font-weight:900;letter-spacing:-.03em;margin-bottom:4px}
 .pg-desc{font-size:13px;color:var(--g4);margin-bottom:24px}
-
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-
 .pcard{background:#fff;border-radius:var(--cr);border:1.5px solid var(--g2);overflow:hidden;transition:box-shadow .2s}
 .pcard:hover{box-shadow:0 4px 20px rgba(0,0,0,.07)}
 .pc-head{background:#111;padding:16px 18px}
@@ -30,7 +44,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fafafa;color:#111;font-si
 .pc-name{font-size:20px;font-weight:900;color:#fff;letter-spacing:-.02em}
 .pc-en{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
 .pc-body{padding:14px}
-
 .slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .slot-wrap{}
 .slot-lbl{font-size:9px;font-weight:700;color:var(--g4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
@@ -47,28 +60,50 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fafafa;color:#111;font-si
 .ov-change:hover{background:#eee}
 .ov-del{background:rgba(255,60,60,.8);color:#fff}
 .ov-del:hover{background:rgba(255,60,60,1)}
-
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:#111;color:#fff;padding:11px 22px;border-radius:var(--r);font-size:13px;font-weight:700;opacity:0;transition:all .25s;z-index:500;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 .empty-state{padding:40px;text-align:center;color:var(--g4);font-size:13px;line-height:2}
 </style>
 </head>
 <body>
 
-<header class="hd">
-  <div style="display:flex;align-items:center">
-    <div class="logo">SLOUBED</div>
-    <span class="logo-tag">ADMIN</span>
+<!-- 로그인 화면 -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">SLOUBED</div>
+    <div class="login-sub">관리자 전용 페이지입니다</div>
+    <div class="login-field">
+      <label>아이디</label>
+      <input type="text" id="loginId" placeholder="아이디 입력" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
-  <a href="/" class="back">← 대시보드</a>
-</header>
+</div>
 
-<div class="main">
-  <div class="pg-title">이미지 관리</div>
-  <div class="pg-desc">슬롯을 클릭해서 이미지를 업로드하세요 — 업로드 즉시 대시보드에 반영됩니다</div>
-  <div class="pgrid" id="grid">
-    <div class="empty-state">불러오는 중...</div>
+<!-- 관리자 화면 -->
+<div id="adminWrap" style="display:none">
+  <header class="hd">
+    <div style="display:flex;align-items:center">
+      <div class="logo">SLOUBED</div>
+      <span class="logo-tag">ADMIN</span>
+    </div>
+    <div class="hd-right">
+      <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+      <a href="/" class="back">← 대시보드</a>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="pg-title">이미지 관리</div>
+    <div class="pg-desc">슬롯을 클릭해서 이미지를 업로드하세요 — 업로드 즉시 대시보드에 반영됩니다</div>
+    <div class="pgrid" id="grid">
+      <div class="empty-state">불러오는 중...</div>
+    </div>
   </div>
 </div>
 
@@ -77,33 +112,69 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fafafa;color:#111;font-si
 <script>
 const API = (location.hostname==='localhost'||location.hostname==='127.0.0.1'
   ? 'http://localhost:3000'
-  : 'https://sloubed-guide.up.railway.app') + '/api';
+  : 'https://sloubed-server-production.up.railway.app') + '/api';
+
+// ── 계정 정보 ──
+const ACCOUNTS = [
+  {id:'sloubed', pw:'gogomoon2026'},
+  {id:'gogomoon2026', pw:'gogomoon2026'}
+];
 
 const SLOTS = [
-  {key:'main',        label:'정면'},
-  {key:'side',        label:'측면'},
-  {key:'crossSection',label:'단면도'},
-  {key:'cover',       label:'커버'},
+  {key:'main', label:'정면'},
+  {key:'side', label:'측면'},
+  {key:'crossSection', label:'단면도'},
+  {key:'cover', label:'커버'},
 ];
 
 let DATA = {};
+
+// ── 로그인 체크 ──
+function checkLogin(){
+  const logged = sessionStorage.getItem('slb_admin');
+  if(logged === 'ok'){
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    load();
+  }
+}
+
+function doLogin(){
+  const id = document.getElementById('loginId').value.trim();
+  const pw = document.getElementById('loginPw').value.trim();
+  const match = ACCOUNTS.find(a => a.id === id && a.pw === pw);
+  if(match){
+    sessionStorage.setItem('slb_admin','ok');
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'block';
+    document.getElementById('loginErr').textContent = '';
+    load();
+  } else {
+    document.getElementById('loginErr').textContent = '아이디 또는 비밀번호가 올바르지 않습니다';
+    document.getElementById('loginPw').value = '';
+  }
+}
+
+function doLogout(){
+  sessionStorage.removeItem('slb_admin');
+  location.reload();
+}
 
 async function load(){
   try {
     const r = await fetch(API+'/products');
     const d = await r.json();
-    if (!d.ok) throw 0;
-    DATA = d.products || {};
+    DATA = d.products || (Array.isArray(d) ? Object.fromEntries(d.map(p=>[p.id,p])) : {});
     render();
   } catch {
     document.getElementById('grid').innerHTML =
-      '<div class="empty-state" style="color:#c00">서버 연결 실패<br>CMD에서 node server.js 실행 확인</div>';
+      '<div class="empty-state" style="color:#c00">서버 연결 실패</div>';
   }
 }
 
 function render(){
   const ps = Object.values(DATA);
-  if (!ps.length) {
+  if(!ps.length){
     document.getElementById('grid').innerHTML =
       '<div class="empty-state">등록된 제품 없음<br>피그마에서 저장 버튼을 눌러주세요</div>';
     return;
@@ -129,7 +200,6 @@ function render(){
         }
       </div>`;
     }).join('');
-
     return `<div class="pcard">
       <div class="pc-head">
         <div class="pc-series">— ${p.seriesKo||p.seriesEn||''}</div>
@@ -145,23 +215,20 @@ function render(){
 
 function upload(id, slot){
   const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'image/*';
+  inp.type = 'file'; inp.accept = 'image/*';
   inp.onchange = async e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 3*1024*1024) { showToast('3MB 이하 이미지만 가능합니다'); return; }
+    const file = e.target.files[0]; if(!file) return;
+    if(file.size > 3*1024*1024){ showToast('3MB 이하 이미지만 가능합니다'); return; }
     showToast('업로드 중...');
     const reader = new FileReader();
     reader.onload = async ev => {
       try {
-        const r = await fetch(`${API}/products/${id}/image`, {
-          method: 'PUT',
-          headers: {'Content-Type':'application/json'},
+        const r = await fetch(`${API}/products/${id}/image`,{
+          method:'PUT', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({slot, base64: ev.target.result})
         });
         const d = await r.json();
-        if (d.ok) { await load(); showToast('✓ 업로드 완료!'); }
+        if(d.ok){ await load(); showToast('✓ 업로드 완료!'); }
         else showToast('업로드 실패');
       } catch { showToast('서버 오류'); }
     };
@@ -171,26 +238,23 @@ function upload(id, slot){
 }
 
 async function del(id, slot){
-  if (!confirm('이미지를 삭제할까요?')) return;
+  if(!confirm('이미지를 삭제할까요?')) return;
   try {
-    const r = await fetch(`${API}/products/${id}/image`, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
+    const r = await fetch(`${API}/products/${id}/image`,{
+      method:'PUT', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({slot, base64: null})
     });
-    const d = await r.json();
-    if (d.ok) { await load(); showToast('삭제 완료'); }
+    const d = await r.json(); if(d.ok){ await load(); showToast('삭제 완료'); }
   } catch { showToast('삭제 실패'); }
 }
 
 function showToast(msg){
   const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
 }
 
-load();
+checkLogin();
 </script>
 </body>
 </html>
