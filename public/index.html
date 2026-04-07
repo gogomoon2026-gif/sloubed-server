@@ -214,6 +214,37 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fff;color:#111;font-size:
 .nid2{font-size:11px;color:var(--g4)}
 .nemp{padding:20px;font-size:13px;color:var(--g4);text-align:center}
 
+/* BRAND COMPARE */
+.brand-view{padding:24px 28px 80px}
+.brand-section{margin-bottom:40px}
+.brand-section-title{font-size:22px;font-weight:900;letter-spacing:-.02em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.brand-section-desc{font-size:13px;color:var(--g4);margin-bottom:16px;line-height:1.7}
+.brand-table-wrap{overflow-x:auto;border-radius:var(--cr);border:1.5px solid var(--g2);margin-bottom:16px}
+.brand-table{width:100%;border-collapse:collapse;background:#fff;min-width:600px}
+.brand-table th{padding:12px 14px;text-align:center;font-size:12px;font-weight:800;background:#111;color:#fff;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1)}
+.brand-table th.slou{background:#2D6CFF;color:#fff}
+.brand-table th:first-child{background:#333;text-align:left;width:80px}
+.brand-table td{padding:11px 14px;border-bottom:1px solid var(--g2);border-right:1px solid var(--g2);font-size:12px;line-height:1.6;color:#444;text-align:center;vertical-align:top}
+.brand-table td:first-child{font-size:11px;font-weight:700;color:var(--g4);background:rgba(0,0,0,.02);text-align:left;white-space:nowrap}
+.brand-table td.slou-val{background:#f0f4ff;font-weight:700;color:#2D6CFF}
+.brand-table td.pain{color:#c00;font-weight:700}
+.brand-table tr:last-child td{border-bottom:none}
+.brand-table tr.sub-head td{background:#f5f5f5;font-weight:800;font-size:11px;color:#555;text-align:left}
+.brand-table tr:hover td{background:rgba(0,0,0,.015)}
+.material-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.material-card{background:#fff;border-radius:14px;border:1.5px solid var(--g2);padding:16px;transition:box-shadow .2s}
+.material-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.mc-category{font-size:10px;font-weight:800;color:var(--g4);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.mc-name{font-size:15px;font-weight:800;margin-bottom:4px;color:#111}
+.mc-stars{color:#FFB347;font-size:13px;margin-bottom:8px}
+.mc-feature{font-size:12px;color:var(--g5);line-height:1.6;margin-bottom:6px;padding-left:12px;position:relative}
+.mc-feature::before{content:'*';position:absolute;left:0;color:var(--g4)}
+.mc-effect{font-size:12px;color:#2D6CFF;line-height:1.6;padding:8px 10px;background:#f0f4ff;border-radius:8px;margin-top:6px}
+.brand-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.brand-tab{padding:8px 16px;border-radius:var(--r);background:var(--g1);border:1.5px solid var(--g2);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.brand-tab.active{background:#111;color:#fff;border-color:#111}
+.brand-tc{display:none}.brand-tc.active{display:block}
+
 /* MODAL (제품 선택) */
 .modal-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex;animation:mfade .15s ease}
@@ -256,6 +287,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#fff;color:#111;font-size:
   <!-- SIDEBAR -->
   <nav class="sb" id="sb">
     <button class="sb-cmp-btn" id="cmpBtn" onclick="openCmpView()">⇄ 제품 비교</button>
+    <button class="sb-cmp-btn" id="brandBtn" onclick="openBrandView()" style="margin-top:6px;background:var(--g1);color:#111;border:1.5px solid var(--g2)">🏷 브랜드 비교</button>
     <div id="sbList"><div class="sb-empty">연결 중...</div></div>
   </nav>
 
@@ -294,6 +326,7 @@ const BADGE_COLORS = ['#FF4B4B','#2D6CFF','#111','#FF8C00','#00A878','#7B2FBE','
 const SW_COLORS = ['#f5f0e8','#e8dfc8','#d4c89a','#d8dde4','#c4d4de','#dcdad4','#c8a882','#e4ddd5','#bcd8e8','#d4c0b4'];
 
 let P={}, CL=[], cur=null;
+let isBrandMode=false;
 let cmpSlots=[]; // 비교 선택된 id 배열
 let modalChosen=null;
 let isCmpMode=false;
@@ -329,13 +362,18 @@ function norm(r){
 async function fetchAll(){
   setSS('ld');
   try{
-    const r=await fetch(`${API}/products`),d=await r.json();
-    if(!d.ok) throw 0;
-    P={}; Object.entries(d.products||{}).forEach(([k,v])=>{P[k]=norm(v);}); CL=d.changelog||[];
+    const [r1,r2]=await Promise.all([fetch(`${API}/products`),fetch(`${API}/history`)]);
+    const d=await r1.json();
+    const hist=await r2.json().catch(()=>[]);
+    P={};
+    const prods=Array.isArray(d)?d:Object.values(d.products||d||{});
+    prods.forEach(v=>{if(v&&v.id)P[v.id]=norm(v);});
+    CL=Array.isArray(hist)?hist:[];
     setSS('on',Object.keys(P).length);
     renderSB(); renderNotif();
     if(cur&&P[cur]) renderDetail(cur);
     else if(isCmpMode) renderCmp();
+    else if(isBrandMode) renderBrandView();
   } catch{
     setSS('off');
     document.getElementById('sbList').innerHTML='<div class="sb-empty">서버 연결 실패<br><br>npm start 실행 확인</div>';
@@ -370,7 +408,7 @@ function renderSB(){
 }
 
 function selectP(id){
-  isCmpMode=false; cur=id;
+  isCmpMode=false; isBrandMode=false; cur=id;
   document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
   const el=document.getElementById(`pc-${id}`);if(el)el.classList.add('active');
   document.getElementById('cmpBtn').classList.remove('active');
@@ -446,7 +484,7 @@ function st(name,el){
 
 // ── COMPARE MODE ──
 function openCmpView(){
-  isCmpMode=true; cur=null;
+  isCmpMode=true; isBrandMode=false; cur=null;
   document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
   document.getElementById('cmpBtn').classList.add('active');
   document.getElementById('emptyState').style.display='none';
@@ -631,6 +669,254 @@ function renderNotif(){
     }).join('')
     :'<div class="nemp">업데이트 없음</div>';
 }
+
+function openBrandView(){
+  isBrandMode=true; isCmpMode=false; cur=null;
+  document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
+  document.getElementById('cmpBtn').classList.remove('active');
+  document.getElementById('brandBtn').classList.add('active');
+  document.getElementById('emptyState').style.display='none';
+  renderBrandView();
+  document.getElementById('sheet').classList.add('open');
+}
+
+function renderBrandView(){
+  const brandTabsHtml = `
+    <div class="brand-tabs">
+      <div class="brand-tab active" onclick="showBrandTab('overview',this)">브랜드 개요</div>
+      <div class="brand-tab" onclick="showBrandTab('cert',this)">인증 비교</div>
+      <div class="brand-tab" onclick="showBrandTab('simmons',this)">시몬스 1:1 비교</div>
+      <div class="brand-tab" onclick="showBrandTab('spring',this)">스프링 소재 분석</div>
+      <div class="brand-tab" onclick="showBrandTab('material',this)">소재 설명</div>
+    </div>`;
+
+  // 브랜드 개요 탭
+  const overviewHtml = `
+    <div class="brand-tc active" id="btc-overview">
+      <div class="brand-section">
+        <div class="brand-section-title">🏷 브랜드 비교 <span style="font-size:13px;font-weight:500;color:var(--g4)">우리는 누구와 경쟁하고 있을까?</span></div>
+        <div class="brand-section-desc">고객이 직접 비교 문의했을 때, 경쟁사 장단점 제대로 알고 대응하기</div>
+        <div class="brand-table-wrap">
+          <table class="brand-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>시몬스</th>
+                <th>에이스/씰리</th>
+                <th>템퍼</th>
+                <th>베스트슬립/브랜드리스</th>
+                <th>한샘/까사미아/슬립퍼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>지향점</td><td>프리미엄</td><td>가성비</td><td>기술력</td><td>거품 없다/진정성</td><td>디자인</td></tr>
+              <tr><td>페인포인트</td><td class="pain">품질 대비 가격</td><td class="pain">본넬 스프링의 한계</td><td class="pain">호불호 강한 폼 물성</td><td class="pain">강조하는 소재 대비 적은 사용량</td><td class="pain">다양성 대비 부족한 제품력</td></tr>
+              <tr><td>비교 대응</td><td style="text-align:left;font-size:11px;line-height:1.8">"시몬스 보고 오셨어요? 실제로 제품 퀄리티도 좋은 편이에요. 단 상담을 해보면 고객님 체형·수면 습관을 세세하게 보지 않고 일부 인기 모델 중심으로 안내되는 경우가 많아요. 저희는 더 세밀하게 비교해 보시는 게 좋아요."</td><td style="text-align:left;font-size:11px;line-height:1.8">"고객님, 딱딱하다고 허리에 좋은 건 아니에요. 본넬 스프링 체험하실 때, 모서리 부분 앉아보세요. 구조상 반대편 끝까지 바로 흔들립니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"평소에 더워 많이 타시면 폼만으로 만든 매트리스는 조금 힘들 수 있어요. 템퍼 폼은 특히 온도에 민감해서 계절마다 쿠션감 차이가 많이 납니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"소재 자체는 잘 쓰는 편인데, 실제로 제품 내부를 보면 강조하는 소재 대비 사용량이 적은 경우가 있어요. 실물 구조를 꼭 비교해보시면 좋습니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"지금은 어디에 누워도 편안할지 몰라도 1-2년만 지나도 상황이 바뀔 수 있어요. 장기 투자 관점으로 보셔야 후회가 없습니다."</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // 인증 비교 탭
+  const certHtml = `
+    <div class="brand-tc" id="btc-cert">
+      <div class="brand-section">
+        <div class="brand-section-title">🏅 인증 비교</div>
+        <div class="brand-table-wrap">
+          <table class="brand-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th class="slou">슬로우베드</th>
+                <th>시몬스/N32</th>
+                <th>에이스</th>
+                <th>씰리</th>
+                <th>템퍼</th>
+                <th>베스트슬립/브랜드리스</th>
+                <th>한샘</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="sub-head"><td colspan="8">인증 — 라돈토론</td></tr>
+              <tr>
+                <td>라돈토론</td>
+                <td class="slou-val">KOTITI 방사성 안전 인증 (국가 공인)</td>
+                <td>KSA 라돈토론 안전 제품 인증 (국가 공인 X)</td>
+                <td>KSA 라돈토론 안전 제품 인증 (국가 공인 X) - 현재 미진행</td>
+                <td>-</td>
+                <td>-</td>
+                <td>환경부 권고 수치 준수 (인증 X)</td>
+                <td>-</td>
+              </tr>
+              <tr class="sub-head"><td colspan="8">인증 — 유해성</td></tr>
+              <tr>
+                <td>유해성</td>
+                <td class="slou-val">그린가드 GOLD + 새니타이즈</td>
+                <td>난연·친환경 환경 표지 인증 / N32 비건·동물복지·더마테스트</td>
+                <td>친환경 환경 표지 인증</td>
+                <td>-</td>
+                <td>OEKO-TEX® MADE IN GREEN</td>
+                <td>대한아토피협회 추천마크</td>
+                <td>기본 유해 물질 검사만 진행</td>
+              </tr>
+              <tr class="sub-head"><td colspan="8">품질 보증</td></tr>
+              <tr>
+                <td>스프링</td>
+                <td class="slou-val">완제품 5년 (스프링+폼+패딩 전체)</td>
+                <td>15년</td>
+                <td>15~20년 (품목별 상이)</td>
+                <td>5~10년 (품목별 상이)</td>
+                <td>-</td>
+                <td>베스트슬립 10~25년 / 브랜드리스 10~15년</td>
+                <td>15년 (포시즌 5,6,7만 해당)</td>
+              </tr>
+              <tr>
+                <td>폼+패딩</td>
+                <td class="slou-val">완제품 5년 통합 보증</td>
+                <td>-</td>
+                <td class="pain">3년</td>
+                <td>-</td>
+                <td class="pain">10년</td>
+                <td class="pain">1년</td>
+                <td class="pain">별도 공지 X</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // 시몬스 1:1 비교 탭
+  const simmonsHtml = `
+    <div class="brand-tc" id="btc-simmons">
+      <div class="brand-section">
+        <div class="brand-section-title">⚔️ 시몬스 vs 슬로우베드 1:1 비교</div>
+        <div class="brand-table-wrap">
+          <table class="brand-table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>마르코니</th>
+                <th>지젤</th>
+                <th>윌리엄</th>
+                <th>켈리 (최고가)</th>
+                <th class="slou">하프문</th>
+                <th class="slou">뉴문</th>
+                <th class="slou">선셋</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="sub-head"><td colspan="8">— 시몬스 —</td></tr>
+              <tr><td>SS 가격</td><td>187만원</td><td>274만원</td><td>395만원</td><td class="pain">1779만원</td><td class="slou-val">156만원</td><td class="slou-val">165만원</td><td class="slou-val">263만원</td></tr>
+              <tr><td>K 가격</td><td>303만원</td><td>446만원</td><td>642만원</td><td class="pain">2890만원</td><td class="slou-val">240만원</td><td class="slou-val">249만원</td><td class="slou-val">353만원</td></tr>
+              <tr><td>높이</td><td class="pain">27cm</td><td>33cm</td><td>34cm</td><td>47cm</td><td class="slou-val">34cm</td><td class="slou-val">34cm</td><td class="slou-val">39cm</td></tr>
+              <tr><td>스프링 소재</td><td colspan="2">바나듐 포켓</td><td>바나듐 포켓</td><td>바나듐 블랙케이블 마이크로포켓스프링</td><td class="slou-val" colspan="2">302H 스테인리스 포켓</td><td class="slou-val">미니포켓스프링 스테인리스 + 302H 스테인리스 포켓</td></tr>
+              <tr><td>스프링 두께</td><td>2mm</td><td>2mm</td><td>2mm</td><td>2mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td></tr>
+              <tr><td>조닝</td><td>-</td><td>-</td><td>MPS 시스템</td><td>-</td><td class="slou-val" colspan="3">WAS 7 ZONE</td></tr>
+              <tr><td>패딩</td><td colspan="2">맥시멈 세이프티 난연</td><td>퓨어울 맥시멈 세이프티 난연</td><td>소프트 알파카 맥시멈 세이프티 난연</td><td class="slou-val" colspan="3">스마트셀 소취 + 울트라리사이클 온도통기 + 새니타이즈항균</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // 스프링 소재 분석 탭
+  const springHtml = `
+    <div class="brand-tc" id="btc-spring">
+      <div class="brand-section">
+        <div class="brand-section-title">🔩 스프링 소재 비교 분석 <span style="font-size:13px;font-weight:500;color:var(--g4)">스프링은 탄탄한게 최고 아닌가?</span></div>
+        <div class="brand-section-desc">매트리스는 오래 써야 하니까, 여러 성능이 균형 잡힌 소재가 더 안정적이죠!</div>
+        <div class="brand-table-wrap">
+          <table class="brand-table">
+            <thead>
+              <tr>
+                <th>분류</th>
+                <th class="slou">슬로우베드</th>
+                <th>시몬스</th>
+                <th>한샘</th>
+                <th>브랜드리스</th>
+                <th>에이스</th>
+                <th>씰리</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>소재</td><td class="slou-val">302H 스테인레스</td><td>바나듐 합금강선</td><td>오일 템퍼선 강선</td><td>경강선(고탄소강선)</td><td>황동 도금 강선</td><td>티타늄 도금 강선</td></tr>
+              <tr><td>내식성 (부식·녹 발생 저항)</td><td class="slou-val">5.0</td><td class="pain">1.5</td><td class="pain">1.5</td><td class="pain">1.5</td><td>3.0</td><td>3.5</td></tr>
+              <tr><td>피로수명 (반복하중에서의 내구성)</td><td>3.5</td><td>5.0</td><td class="pain">2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr>
+              <tr><td>탄성 (항복강도·인장강도 기반 반발력)</td><td>3.0</td><td>5.0</td><td>4.0</td><td>4.5</td><td>4.5</td><td>4.5</td></tr>
+              <tr><td>소음 (마찰음·삐걱거림 발생 가능성)</td><td class="slou-val">5.0</td><td class="pain">2.5</td><td class="pain">2.0</td><td class="pain">2.5</td><td>3.5</td><td>4.0</td></tr>
+              <tr><td>종합 진단</td>
+                <td class="slou-val" style="text-align:left;font-size:11px">✓ 내식성·위생성·소음 절대적 1위<br>✓ 장기 안정성 우수<br>✓ 편안한 반발력<br><strong>조용한 체감 품질에 최적화된 고급·프리미엄 소재</strong></td>
+                <td style="text-align:left;font-size:11px">✓ 탄성·반발력 최고<br>✓ 피로수명 우수<br>❌ 내식성 최저(녹·마모 리스크 큼)<br>❌ 소음 가능성↑</td>
+                <td style="text-align:left;font-size:11px">✓ 초기 탄성·강도 준수<br>✓ 가성비 우수<br>❌ 피로수명 낮음(장기 내구성 편차)<br>❌ 내식성 낮아 녹·소음 발생 가능</td>
+                <td style="text-align:left;font-size:11px">✓ 탄성·반발력 우수<br>✓ 표준적이고 익숙한 스프링 감각<br>❌ 내식성 매우 낮음<br>❌ 소음·산화 가능성 큼</td>
+                <td style="text-align:left;font-size:11px">✓ 도금으로 부식 성능 보완<br>✓ 탄성·내구성 준수<br>❌ 도금층 마모·변색 가능성<br>❌ 도금 품질 따라 성능 편차 큼</td>
+                <td style="text-align:left;font-size:11px">✓ 도금으로 내식·접속성 개선<br>✓ 탄성·반발력 강함(고탄소강 기반)<br>❌ 도금층 마모·변색 가능성<br>❌ '티타늄 합금이 아닌 Ti 도금' 강도 향상은 제한적</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // 소재 설명 탭
+  const materialData = [
+    {cat:'스프링', name:'스테인리스 스프링 소재', stars:5, feature:'식품·의료 분야에 쓰이는 고가 소재로, 녹과 부식에 강한 압도적 내식성 보유', effect:'습기에도 변형 없는 탄탄한 지지력이 유지되어, 10년 후에도 위생적이고 편안한 수면 환경을 제공합니다.'},
+    {cat:'스프링', name:'마이크로포켓 스프링 가공방식', stars:3, feature:'일반 스프링보다 작은 크기의 개별 스프링이 압력에 따라 세밀하게 독립 반응', effect:'옆 사람의 뒤척임에도 흔들림이 전달되지 않으며, 신체 곡선을 골고루 받쳐주어 아침을 개운하게 해줍니다.'},
+    {cat:'스프링', name:'7조닝 가공방식', stars:2, feature:'신체 부위별 하중을 분석해 탄성을 7개 영역으로 다르게 배분한 기술력', effect:'머리부터 발끝까지 신체 하중에 맞게 최적화된 지지력을 제공하여, 허리는 받쳐주고 어깨는 포근하게 감싸줍니다.'},
+    {cat:'폼', name:'레코텍 폼', stars:5, feature:'진흙처럼 부드럽고 진득하게 몸에 밀착되는 하이엔드 메모리폼의 안락한 질감', effect:'몸의 곡선을 따라 천천히 스며들 듯 밀착되어, 잠기는 느낌 없이 몸을 부드럽게 감싸 안아 깊은 휴식을 선사합니다.'},
+    {cat:'폼', name:'엘라스틱 폼', stars:2, feature:'천연 라텍스의 즉각적인 반발력은 살리고, 부스러짐 등 내구성 문제는 개선한 특수 폼', effect:'적은 힘에도 빠르게 반응해 탄탄함을 유지하며, 근력이 부족한 분들도 큰 힘을 들이지 않고 몸을 일으키기 편안합니다.'},
+    {cat:'폼', name:'3D 텐션 서스펜션폼', stars:1, feature:'계란판 형태의 가공으로 공기 흐름을 돕고, 푸딩처럼 탄력 있게 반응하는 지지력 구현', effect:'누웠을 때 몸이 쑥 잠기지 않고 즉각적으로 받쳐주어, 수면 중 잦은 뒤척임에도 흔들림 없는 안정감을 느낄 수 있습니다.'},
+    {cat:'폼', name:'2D 플러시 서포트폼', stars:1, feature:'어깨와 엉덩이처럼 굴곡이 큰 부위만 유연하게 움직이도록 홈을 판 2D 맞춤 설계', effect:'옆으로 누웠을 때 어깨가 부드럽게 들어가 압박을 분산하며, 어떤 자세에서도 신체 곡선을 빈틈없이 고르게 채워줍니다.'},
+    {cat:'폼', name:'젠틀 인핸스드 서스펜션폼', stars:1, feature:'전체가 눌리는 것이 아니라 접히듯 유연하게 반응하여 신체의 굴곡진 부위에 즉각 밀착', effect:'움직일 때마다 몸의 형태에 맞춰 즉각적인 지지력을 제공하여, 수면 중 어떤 움직임에도 방해받지 않는 안정감을 줍니다.'},
+    {cat:'패딩', name:'새니타이즈 패딩', stars:5, feature:'원단과 패딩에 적용되어 세균 및 냄새의 원인이 되는 미생물 증식을 원천 억제', effect:'유해 미생물을 효과적으로 차단해 민감한 피부도 안심할 수 있으며, 땀이 많은 계절에도 오래도록 청결함을 유지합니다.'},
+    {cat:'패딩', name:'호주산 양모', stars:3, feature:'장섬유 양모의 크림프 구조가 공기를 머금어 화학솜 대비 최대 40배의 흡습성 보유', effect:'사계절 최적의 온도를 자동으로 조절하고 습기를 빠르게 배출하여, 아침까지 보송보송하고 산뜻한 잠자리를 이어줍니다.'},
+  ];
+
+  const materialHtml = `
+    <div class="brand-tc" id="btc-material">
+      <div class="brand-section">
+        <div class="brand-section-title">🧪 소재 상세 설명</div>
+        <div class="brand-section-desc">슬로우베드(SLOU BED) 핵심 소재의 특징과 고객 효능</div>
+        <div class="material-grid">
+          ${materialData.map(m=>`
+            <div class="material-card">
+              <div class="mc-category">${m.cat}</div>
+              <div class="mc-name">${m.name}</div>
+              <div class="mc-stars">${'★'.repeat(m.stars)}${'☆'.repeat(5-m.stars)}</div>
+              <div class="mc-feature">${m.feature}</div>
+              <div class="mc-effect">💬 ${m.effect}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('si').innerHTML = `
+    <div style="font-size:24px;font-weight:900;margin-bottom:4px;letter-spacing:-.02em">브랜드 비교</div>
+    <div style="font-size:13px;color:#999;margin-bottom:20px">경쟁사 분석 · 소재 비교 · 대응 가이드</div>
+    ${brandTabsHtml}
+    <div id="brand-tab-content">
+      ${overviewHtml}
+      ${certHtml}
+      ${simmonsHtml}
+      ${springHtml}
+      ${materialHtml}
+    </div>
+    <div class="bot-btns" style="margin-top:16px">
+      <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록</button>
+    </div>`;
+}
+
+function showBrandTab(name, el){
+  document.querySelectorAll('.brand-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.brand-tc').forEach(t=>t.style.display='none');
+  const tc=document.getElementById('btc-'+name);
+  if(tc) tc.style.display='block';
+}
+
 function toggleNotif(){document.getElementById('npanel').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('#notifBtn')&&!e.target.closest('#npanel'))document.getElementById('npanel').classList.remove('open');});
 
