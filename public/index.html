@@ -409,15 +409,36 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 }
 .brand-section-desc{font-size:13px;color:var(--g4);margin-bottom:20px;line-height:1.8}
 .brand-table-wrap{overflow-x:auto;border:1px solid var(--g2);margin-bottom:16px}
-.brand-table{width:100%;border-collapse:collapse;background:var(--white);min-width:600px}
-.brand-table th{padding:14px 16px;text-align:center;font-size:12px;font-weight:700;background:var(--black);color:#fff;white-space:nowrap;border-right:1px solid rgba(255,255,255,.08);letter-spacing:.04em}
+.brand-table{border-collapse:collapse;background:var(--white);min-width:600px;table-layout:fixed;width:100%}
+.brand-table th{
+  padding:14px 16px;text-align:center;font-size:12px;font-weight:700;
+  background:var(--black);color:#fff;
+  border-right:1px solid rgba(255,255,255,.08);letter-spacing:.04em;
+  position:relative;overflow:hidden;word-break:keep-all;
+}
 .brand-table th.slou{background:var(--blue)}
 .brand-table th:first-child{background:#222;text-align:left;width:90px}
-.brand-table td{padding:13px 16px;border-bottom:1px solid var(--g2);border-right:1px solid var(--g2);font-size:13px;line-height:1.7;color:var(--g5);text-align:center;vertical-align:top}
+.brand-table td{
+  padding:13px 16px;border-bottom:1px solid var(--g2);border-right:1px solid var(--g2);
+  font-size:13px;line-height:1.7;color:var(--g5);text-align:center;vertical-align:top;
+  word-break:keep-all;overflow-wrap:break-word;
+}
 .brand-table td:first-child{font-size:11px;font-weight:700;color:var(--g4);background:var(--g1);text-align:left;white-space:nowrap}
 .brand-table td.slou-val{background:#eff6ff;font-weight:700;color:var(--blue)}
 .brand-table td.pain{color:var(--red);font-weight:700}
 .brand-table tr:last-child td{border-bottom:none}
+/* 리사이즈 핸들 */
+.col-resizer{
+  position:absolute;right:0;top:0;bottom:0;width:6px;
+  cursor:col-resize;background:transparent;z-index:10;
+  user-select:none;
+}
+.col-resizer:hover,.col-resizer.resizing{background:rgba(255,255,255,.3)}
+.brand-table-hint{
+  font-size:11px;color:var(--g4);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.brand-table-hint::before{content:'↔';font-size:13px}
 .brand-table tr.sub-head td{background:#f0f0ee;font-weight:700;font-size:11px;color:var(--g5);text-align:left;letter-spacing:.04em;text-transform:uppercase}
 .brand-table tr:hover td{background:var(--g1)}
 .material-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
@@ -993,7 +1014,7 @@ function renderBrandView(){
     <div class="brand-section">
       <div class="brand-section-title">브랜드 비교 · 우리는 누구와 경쟁하고 있을까?</div>
       <div class="brand-section-desc">고객이 직접 비교 문의했을 때, 경쟁사 장단점 제대로 알고 대응하기</div>
-      <div class="brand-table-wrap"><table class="brand-table">
+      <div class="brand-table-hint">헤더 경계를 드래그해서 열 너비를 조절할 수 있어요</div><div class="brand-table-wrap"><table class="brand-table">
         <thead><tr><th>구분</th><th>시몬스</th><th>에이스/씰리</th><th>템퍼</th><th>베스트슬립/브랜드리스</th><th>한샘/까사미아/슬립퍼</th></tr></thead>
         <tbody>
           <tr><td>지향점</td><td>프리미엄</td><td>가성비</td><td>기술력</td><td>거품 없다/진정성</td><td>디자인</td></tr>
@@ -1099,6 +1120,8 @@ function renderBrandView(){
     <div class="bot-btns">
       <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button>
     </div>`;
+  // 테이블 리사이즈 초기화
+  requestAnimationFrame(()=>initResizableTables());
 }
 
 function showBrandTab(name, el){
@@ -1112,8 +1135,11 @@ function showBrandTab(name, el){
   const tc=document.getElementById('btc-'+name);
   if(tc) tc.style.display='block';
   if(name==='material') renderMaterialGrid();
-  // 스크롤 복원
-  requestAnimationFrame(()=>{if(sheet) sheet.scrollTop=savedScroll;});
+  // 스크롤 복원 + 리사이즈 초기화
+  requestAnimationFrame(()=>{
+    if(sheet) sheet.scrollTop=savedScroll;
+    initResizableTables();
+  });
 }
 
 // ── 소재 필터 전역 ──
@@ -1179,51 +1205,96 @@ function renderQuickView(tab){
   const ps=Object.values(P);
   const tabs=['qna','plan','size'];
   const tabLabels={qna:'Q&A 모음',plan:'기획 의도',size:'사이즈 모음'};
-  const tabHtml=`<div class="tabs" style="margin-bottom:28px">${tabs.map(t=>`<div class="tab${tab===t?' active':''}" onclick="renderQuickView('${t}')">${tabLabels[t]}</div>`).join('')}</div>`;
+  const tabHtml=`<div class="tabs" style="margin-bottom:32px">${tabs.map(t=>`<div class="tab${tab===t?' active':''}" onclick="renderQuickView('${t}')">${tabLabels[t]}</div>`).join('')}</div>`;
+
+  // 시리즈별 그룹핑
+  const groups={};
+  ps.forEach(p=>{const g=p._series||'기타';if(!groups[g])groups[g]=[];groups[g].push(p);});
+
   let bodyHtml='';
+
   if(tab==='qna'){
-    bodyHtml=ps.map(p=>{
-      const qnas=(p.qna||[]).filter(q=>q&&q.q);
-      if(!qnas.length)return'';
-      return`<div style="margin-bottom:28px">
-        <div style="font-size:12px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--black);margin-bottom:14px">${p._name} <span style="font-weight:400">${p._nameEn}</span></div>
-        ${qnas.map(q=>`<div style="padding:14px 18px;border:1px solid var(--g2);margin-bottom:8px;background:var(--white)">
-          <div style="font-size:14px;font-weight:700;margin-bottom:8px">Q. ${q.q}</div>
-          ${q.a?`<div style="font-size:13px;color:var(--g5);line-height:1.8;padding-top:10px;border-top:1px solid var(--g2)">${q.a}</div>`:''}</div>`).join('')}
+    bodyHtml=Object.entries(groups).map(([series,items])=>{
+      const cards=items.map(p=>{
+        const qnas=(p.qna||[]).filter(q=>q&&q.q);
+        if(!qnas.length)return'';
+        return`<div style="flex:1;min-width:280px;max-width:400px;background:var(--white);border:1px solid var(--g2);display:flex;flex-direction:column">
+          <div style="padding:14px 18px;border-bottom:1px solid var(--g2);background:var(--g1);display:flex;align-items:baseline;gap:8px">
+            <span style="font-size:15px;font-weight:800">${p._name}</span>
+            <span style="font-size:11px;color:var(--g4);letter-spacing:.04em">${p._nameEn||''}</span>
+          </div>
+          <div style="padding:14px 18px;flex:1">
+            ${qnas.map((q,qi)=>`<div style="padding-bottom:12px;margin-bottom:12px;border-bottom:${qi<qnas.length-1?'1px solid var(--g2)':'none'}">
+              <div style="font-size:13px;font-weight:700;color:var(--black);margin-bottom:6px;line-height:1.5">Q. ${q.q}</div>
+              ${q.a?`<div style="font-size:13px;color:var(--g5);line-height:1.8">${q.a}</div>`:''}
+            </div>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+      if(!cards.trim())return'';
+      return`<div style="margin-bottom:36px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">${series}</div>
+          <div style="flex:1;height:1px;background:var(--g2)"></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">${cards}</div>
       </div>`;
-    }).join('')||'<div style="color:var(--g4);padding:32px;text-align:center">Q&A 데이터 없음</div>';
+    }).join('')||'<div style="color:var(--g4);padding:32px;text-align:center;font-size:15px">Q&A 데이터 없음</div>';
   }
+
   if(tab==='plan'){
-    bodyHtml=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
-      ${ps.filter(p=>p.planHead||p.planBody).map(p=>`<div style="background:var(--white);border:1px solid var(--g2);padding:20px 24px;border-left:3px solid var(--black)">
-        <div style="font-size:10px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">${p._series}</div>
-        <div style="font-size:16px;font-weight:800;margin-bottom:12px">${p._name}</div>
-        ${p.planHead?`<div style="font-size:14px;font-weight:700;margin-bottom:10px;line-height:1.6">${p.planHead}</div>`:''}
-        ${p.planBody?`<div style="font-size:13px;color:var(--g5);line-height:1.9">${p.planBody}</div>`:''}
-      </div>`).join('')}
-    </div>`;
+    bodyHtml=Object.entries(groups).map(([series,items])=>{
+      const cards=items.filter(p=>p.planHead||p.planBody).map(p=>`
+        <div style="flex:1;min-width:280px;max-width:400px;background:var(--white);border:1px solid var(--g2);border-top:3px solid var(--black)">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--g2);background:var(--g1)">
+            <div style="font-size:15px;font-weight:800">${p._name}</div>
+            <div style="font-size:12px;color:var(--g4);margin-top:2px">${p._nameEn||''}</div>
+          </div>
+          <div style="padding:16px 20px">
+            ${p.planHead?`<div style="font-size:14px;font-weight:700;line-height:1.7;margin-bottom:12px;color:var(--black)">${p.planHead}</div>`:''}
+            ${p.planBody?`<div style="font-size:13px;color:var(--g5);line-height:2">${p.planBody}</div>`:''}
+          </div>
+        </div>`).join('');
+      if(!cards.trim())return'';
+      return`<div style="margin-bottom:36px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">${series}</div>
+          <div style="flex:1;height:1px;background:var(--g2)"></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">${cards}</div>
+      </div>`;
+    }).join('')||'<div style="color:var(--g4);padding:32px;text-align:center;font-size:15px">기획 의도 데이터 없음</div>';
   }
+
   if(tab==='size'){
-    bodyHtml=`<div style="overflow-x:auto;border:1px solid var(--g2)">
-      <table style="width:100%;border-collapse:collapse;min-width:500px;background:var(--white)">
-        <thead><tr style="background:var(--black)">
-          <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff">제품명</th>
-          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">시리즈</th>
-          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">경도</th>
-          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">규격</th>
-          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">사이즈</th>
-        </tr></thead>
-        <tbody>${ps.map((p,pi)=>p._sizes.map((s,si)=>`
-          <tr style="border-bottom:1px solid var(--g2);background:${pi%2===0?'var(--white)':'var(--g1)'}">
-            ${si===0?`<td style="padding:12px 16px;font-weight:700;vertical-align:top" rowspan="${p._sizes.length}">${p._name}</td>
-            <td style="padding:12px 16px;color:var(--g4);vertical-align:top" rowspan="${p._sizes.length}">${p._series}</td>
-            <td style="padding:12px 16px;vertical-align:top" rowspan="${p._sizes.length}">${p.softness||'—'}</td>`:''}
-            <td style="padding:12px 16px;font-weight:600">${s.name}</td>
-            <td style="padding:12px 16px;color:var(--g5);font-size:13px">${s.w&&s.d?s.w+' × '+s.d+' mm':'—'}${s.h?' / H '+s.h+' mm':''}</td>
-          </tr>`).join('')).join('')}</tbody>
-      </table>
-    </div>`;
+    bodyHtml=Object.entries(groups).map(([series,items])=>{
+      const cards=items.map(p=>{
+        if(!p._sizes.length)return'';
+        return`<div style="flex:1;min-width:200px;max-width:320px;background:var(--white);border:1px solid var(--g2)">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--g2);background:var(--g1)">
+            <div style="font-size:15px;font-weight:800">${p._name}</div>
+            <div style="font-size:12px;color:var(--g4);margin-top:2px">${p.softness||''}${p._nameEn?' · '+p._nameEn:''}</div>
+          </div>
+          <div style="padding:12px 16px">
+            ${p._sizes.map(s=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--g2)">
+              <span style="font-size:14px;font-weight:800;min-width:36px">${s.name}</span>
+              <span style="font-size:13px;color:var(--g5)">${s.w&&s.d?s.w+' × '+s.d+' mm':'—'}</span>
+              <span style="font-size:12px;color:var(--g4)">${s.h?'H '+s.h+'mm':''}</span>
+            </div>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+      if(!cards.trim())return'';
+      return`<div style="margin-bottom:36px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="font-size:11px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">${series}</div>
+          <div style="flex:1;height:1px;background:var(--g2)"></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">${cards}</div>
+      </div>`;
+    }).join('');
   }
+
   document.getElementById('si').innerHTML=`
     <div style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em">빠른 조회</div>
     <div style="font-size:13px;color:#999;margin-bottom:24px">전 제품 Q&A · 기획의도 · 사이즈를 한눈에</div>
@@ -1356,6 +1427,77 @@ function renderQuoteView(){
     </div>
     <div class="bot-btns"><button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button></div>`;
   setTimeout(updateQuoteCalc, 50);
+}
+
+// ── 테이블 컬럼 리사이즈 ──
+function makeTableResizable(table){
+  if(!table) return;
+  const ths = table.querySelectorAll('th');
+  ths.forEach((th, idx)=>{
+    // 첫 번째 컬럼(구분 열)은 제외
+    if(idx === 0) return;
+
+    // 기본 너비 설정
+    if(!th.style.width){
+      th.style.width = th.offsetWidth + 'px';
+    }
+
+    // 핸들 생성
+    const handle = document.createElement('div');
+    handle.className = 'col-resizer';
+    th.appendChild(handle);
+
+    let startX, startW;
+
+    handle.addEventListener('mousedown', e=>{
+      e.preventDefault();
+      startX = e.clientX;
+      startW = th.offsetWidth;
+      handle.classList.add('resizing');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+
+      const onMove = e=>{
+        const diff = e.clientX - startX;
+        const newW = Math.max(80, startW + diff);
+        th.style.width = newW + 'px';
+        th.style.minWidth = newW + 'px';
+      };
+      const onUp = ()=>{
+        handle.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    // 터치 지원
+    handle.addEventListener('touchstart', e=>{
+      e.preventDefault();
+      startX = e.touches[0].clientX;
+      startW = th.offsetWidth;
+      const onMove = e=>{
+        const diff = e.touches[0].clientX - startX;
+        const newW = Math.max(80, startW + diff);
+        th.style.width = newW + 'px';
+        th.style.minWidth = newW + 'px';
+      };
+      const onEnd = ()=>{
+        handle.removeEventListener('touchmove', onMove);
+        handle.removeEventListener('touchend', onEnd);
+      };
+      handle.addEventListener('touchmove', onMove, {passive:false});
+      handle.addEventListener('touchend', onEnd);
+    }, {passive:false});
+  });
+}
+
+// 브랜드 탭 전환 시 리사이즈 초기화
+function initResizableTables(){
+  document.querySelectorAll('.brand-table').forEach(t=>makeTableResizable(t));
 }
 
 // 페이지 포커스 시 재연결
