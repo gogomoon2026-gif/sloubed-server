@@ -68,7 +68,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 
 /* ── SIDEBAR ── */
 .sb{
-  width:280px;flex-shrink:0;
+  width:var(--sidebar);flex-shrink:0;
   background:var(--white);
   border-right:1px solid var(--g2);
   height:calc(100vh - var(--header));
@@ -91,20 +91,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .sb-divider{height:1px;background:var(--g2);margin:4px 0}
 .sb-list{flex:1;padding:8px 12px 24px;overflow-y:auto}
 .sb-group-lbl{
-  font-size:11px;font-weight:800;color:var(--black);
-  letter-spacing:.04em;
-  padding:10px 12px;margin:0 -12px;
-  border-bottom:1px solid var(--g2);
-  background:var(--g1);
-  display:flex;align-items:center;justify-content:space-between;
-  cursor:pointer;user-select:none;
-  transition:background .15s;
+  font-size:10px;font-weight:700;color:var(--g4);
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:16px 4px 8px;
+  border-bottom:1px solid var(--g2);margin-bottom:6px;
 }
-.sb-group-lbl:hover{background:var(--g2)}
-.sb-group-lbl .toggle-arrow{font-size:10px;color:var(--g4);transition:transform .2s}
-.sb-group-lbl.collapsed .toggle-arrow{transform:rotate(-90deg)}
-.sb-group-body{overflow:hidden;transition:max-height .25s ease}
-.sb-group-body.collapsed{max-height:0!important}
+.sb-group-lbl:first-child{padding-top:8px}
 .pc{
   padding:12px 10px;border-radius:var(--radius);
   cursor:pointer;transition:var(--transition);
@@ -133,7 +125,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 /* ── SHEET ── */
 .sheet{
   position:fixed;top:var(--header);right:0;bottom:0;
-  width:calc(100% - 280px);
+  width:calc(100% - var(--sidebar));
   background:var(--white);overflow-y:auto;
   transform:translateX(100%);
   transition:transform .32s cubic-bezier(.4,0,.2,1);z-index:100;
@@ -374,9 +366,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .diff-red{font-weight:700;color:var(--red)}
 
 /* ── NOTIF PANEL ── */
-@keyframes bellRing{0%{transform:rotate(0)}20%{transform:rotate(-15deg)}40%{transform:rotate(15deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(10deg)}100%{transform:rotate(0)}}
-.bell-ring{animation:bellRing .5s ease 2!important}
-
 .npanel{
   position:fixed;top:64px;right:16px;z-index:300;
   width:320px;background:var(--white);
@@ -461,6 +450,54 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .mitn{font-size:15px;font-weight:700;color:var(--black);margin-bottom:3px}
 .mits{font-size:12px;color:var(--g4)}
 .modal-btns{display:flex;gap:8px}
+
+/* ── SIDEBAR TOGGLE ── */
+.sb-group-lbl{
+  font-size:11px;font-weight:800;color:var(--black);
+  letter-spacing:.04em;
+  padding:10px 12px;margin:0 -12px;
+  border-bottom:1px solid var(--g2);
+  background:var(--g1);
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;
+  transition:background .15s;
+}
+.sb-group-lbl:hover{background:var(--g2)}
+.sb-group-lbl .toggle-arrow{font-size:10px;color:var(--g4);transition:transform .2s;flex-shrink:0}
+.sb-group-lbl.collapsed .toggle-arrow{transform:rotate(-90deg)}
+.sb-group-body{overflow:hidden;transition:max-height .25s ease}
+.sb-group-body.collapsed{max-height:0!important}
+
+/* ── QUOTE ── */
+.quote-wrap{font-family:'Noto Sans KR',sans-serif}
+.quote-header{text-align:center;padding:24px 0 16px;border-bottom:3px solid var(--black);margin-bottom:20px}
+.quote-brand{font-size:22px;font-weight:900;letter-spacing:.2em;margin-bottom:4px}
+.quote-title{font-size:14px;font-weight:700;letter-spacing:.1em}
+.quote-section-title{font-size:12px;font-weight:800;background:var(--black);color:#fff;padding:8px 14px;letter-spacing:.06em;margin-bottom:0}
+.quote-table{width:100%;border-collapse:collapse;border:1px solid var(--black);margin-bottom:20px;font-size:13px}
+.quote-table th{padding:9px 10px;background:var(--g1);border:1px solid var(--g2);font-weight:700;font-size:12px;text-align:center;white-space:nowrap}
+.quote-table td{padding:9px 10px;border:1px solid var(--g2);text-align:center;vertical-align:middle}
+.quote-table td.left{text-align:left}
+.quote-add-btn{width:100%;padding:10px;border:1px dashed var(--g3);background:transparent;font-size:13px;font-weight:600;color:var(--g4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;margin-bottom:20px}
+.quote-add-btn:hover{border-color:var(--black);color:var(--black)}
+.quote-discount-box{background:var(--g1);border:1px solid var(--g2);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.quote-discount-box label{font-size:13px;font-weight:700;white-space:nowrap}
+.quote-discount-box input{border:1px solid var(--g2);padding:8px 12px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;width:80px;text-align:center;outline:none}
+.quote-result-box{background:var(--black);color:#fff;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.quote-result-label{font-size:13px;color:rgba(255,255,255,.6);font-weight:600}
+.quote-result-val{font-size:22px;font-weight:900;letter-spacing:-.02em}
+.quote-result-save{font-size:13px;color:#86efac;font-weight:700}
+.quote-print-btn{width:100%;padding:14px;background:var(--black);color:#fff;border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:'Noto Sans KR',sans-serif;letter-spacing:.06em;transition:all .2s;margin-bottom:8px}
+.quote-print-btn:hover{background:#222}
+.q-toggle-group{display:flex;flex-wrap:wrap;gap:5px;padding:4px 0}
+.q-toggle-btn{padding:5px 11px;border:1px solid var(--g2);background:var(--white);font-size:12px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .15s;color:var(--black);border-radius:3px}
+.q-toggle-btn:hover{border-color:var(--black)}
+.q-toggle-btn.on{background:var(--black);color:#fff;border-color:var(--black)}
+@media print{
+  .sb,.hd,.npanel,.bot-btns,.quote-print-btn,.quote-add-btn,.quote-discount-box button{display:none!important}
+  .sheet{transform:none!important;width:100%!important;position:static!important}
+  .si{padding:20px!important}
+}
 </style>
 </head>
 <body>
@@ -488,6 +525,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
       <button class="sb-action-btn" id="cmpBtn" onclick="openCmpView()">제품 비교</button>
       <button class="sb-action-btn" id="brandBtn" onclick="openBrandView()">브랜드 비교</button>
       <button class="sb-action-btn" id="quickBtn" onclick="openQuickView()">📋 빠른 조회</button>
+      <button class="sb-action-btn" id="quoteBtn" onclick="openQuoteView()">🧾 견적서</button>
     </div>
     <div class="sb-divider"></div>
     <div class="sb-list" id="sbList"><div class="sb-empty">연결 중...</div></div>
@@ -558,32 +596,81 @@ function norm(r){
   return {...r,_name:name,_nameEn:r.nameEn||'',_series:r.seriesKo||r.seriesEn||'',_layers:layers,_sizes:sizes,_usps:usps};
 }
 
+let isFetching = false;
+let fetchFailCount = 0;
+let pollTimer = null;
+
+// 타임아웃 fetch (10초)
+async function fetchWithTimeout(url, ms=10000){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), ms);
+  try{
+    const r = await fetch(url, {signal: ctrl.signal});
+    clearTimeout(timer);
+    return r;
+  } catch(e){
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
 async function fetchAll(){
+  if(isFetching) return; // 중복 요청 방지
+  isFetching = true;
   setSS('ld');
   try{
-    const [r1,r2]=await Promise.all([fetch(`${API}/products`),fetch(`${API}/history`)]);
-    const d=await r1.json();
-    const hist=await r2.json().catch(()=>[]);
+    // products 먼저 로드 (필수), history는 별도로 (선택)
+    const r1 = await fetchWithTimeout(`${API}/products`);
+    if(!r1.ok) throw new Error('서버 응답 오류: '+r1.status);
+    const d = await r1.json();
     P={};
-    const prods=Array.isArray(d)?d:Object.values(d.products||d||{});
+    const prods = Array.isArray(d)?d:Object.values(d.products||d||{});
     prods.forEach(v=>{if(v&&v.id)P[v.id]=norm(v);});
-    CL=Array.isArray(hist)?hist:[];
-    setSS('on',Object.keys(P).length);
+
+    // history는 실패해도 무시
+    try{
+      const r2 = await fetchWithTimeout(`${API}/history`, 5000);
+      const hist = await r2.json();
+      CL = Array.isArray(hist)?hist:[];
+    } catch{ CL=[]; }
+
+    fetchFailCount = 0;
+    setSS('on', Object.keys(P).length);
     renderSB(); renderNotif();
     if(cur&&P[cur]) renderDetail(cur);
     else if(isCmpMode) renderCmp();
     else if(isBrandMode) renderBrandView();
-    else if(isQuickMode) renderQuickView('qna');
-  } catch{
+
+    // 폴링 간격 조정: 정상 시 30초, 실패 중엔 더 빠르게
+    schedulePoll(30000);
+  } catch(e){
+    fetchFailCount++;
     setSS('off');
-    document.getElementById('sbList').innerHTML='<div class="sb-empty">서버 연결 실패<br><br>npm start 실행 확인</div>';
+    const msg = fetchFailCount <= 2
+      ? '서버 웨이크업 중...<br>잠시 기다려 주세요 ☕'
+      : '연결 실패 — 재시도 중';
+    document.getElementById('sbList').innerHTML=`<div class="sb-empty">${msg}</div>`;
+
+    // 실패 시 재시도: 1~2회는 5초, 이후 15초
+    const retryMs = fetchFailCount <= 2 ? 5000 : 15000;
+    schedulePoll(retryMs);
+  } finally{
+    isFetching = false;
   }
+}
+
+function schedulePoll(ms){
+  if(pollTimer) clearTimeout(pollTimer);
+  pollTimer = setTimeout(fetchAll, ms);
 }
 
 function setSS(s,n){
   const el=document.getElementById('sspill'),dot=document.getElementById('ssd'),tx=document.getElementById('sstext');
-  el.className='ss '+s; dot.className='ssd'+(s==='ld'?' blink':'');
-  tx.textContent=s==='on'?`온라인 ${n}개`:s==='off'?'연결 실패':'연결 중';
+  el.className='ss-pill '+s;
+  dot.className='ss-dot'+(s==='ld'?' blink':'');
+  if(s==='on') tx.textContent=`온라인 · ${n}개`;
+  else if(s==='off') tx.textContent='연결 실패 — 재시도 중';
+  else tx.textContent='연결 중...';
 }
 
 // 사이드바
@@ -599,8 +686,8 @@ function renderSB(){
       <span>${grp}</span><span class="toggle-arrow">▼</span>
     </div>
     <div class="sb-group-body" id="${gid}" style="max-height:800px">`;
-    items.forEach((p,i)=>{
-      h+=`<div class="pc ${cur===p.id&&!isCmpMode&&!isBrandMode?' active':''}" id="pc-${p.id}" onclick="selectP('${p.id}')">
+    items.forEach(p=>{
+      h+=`<div class="pc${cur===p.id&&!isCmpMode&&!isBrandMode?' active':''}" id="pc-${p.id}" onclick="selectP('${p.id}')">
         <div class="pname">${p._name}</div>
         <div class="psub">${p._nameEn||p.softness||''}</div>
       </div>`;
@@ -613,11 +700,12 @@ function renderSB(){
 
 function toggleSBGroup(id,lbl){
   const body=document.getElementById(id);
-  if(!body) return;
+  if(!body)return;
   const collapsed=body.classList.contains('collapsed');
   if(collapsed){body.classList.remove('collapsed');body.style.maxHeight='800px';lbl.classList.remove('collapsed');}
   else{body.classList.add('collapsed');lbl.classList.add('collapsed');}
 }
+
 
 function selectP(id){
   isCmpMode=false; isBrandMode=false; cur=id;
@@ -854,135 +942,32 @@ function applyAdd(){
 }
 document.getElementById('prodModal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
 
-let lastNotifIds = new Set();
-
 function renderNotif(){
-  const items=CL.slice(0,20);
-  // 새 항목 감지
-  const currentIds=new Set(items.map(c=>c.product_id+c.changed_at));
-  const hasNew=[...currentIds].some(id=>!lastNotifIds.has(id)) && lastNotifIds.size>0;
-  if(hasNew){
-    const bell=document.getElementById('notifBtn');
-    bell.classList.add('bell-ring');
-    setTimeout(()=>bell.classList.remove('bell-ring'),1500);
-  }
-  lastNotifIds=currentIds;
+  const items=CL.slice(0,10);
   document.getElementById('ndot').style.display=items.length?'block':'none';
   document.getElementById('nitems').innerHTML=items.length
-    ?items.map((c,idx)=>{
+    ?items.map(c=>{
       const isNew=c.change_type==='CREATE'||c.type==='new';
+      const isUpdate=c.change_type==='UPDATE'||c.type==='updated';
       const isDel=c.change_type==='DELETE';
-      const color=isNew?'#1a7a4a':isDel?'#b91c1c':'#1a4ed8';
-      const badge=isNew?'🆕 신규':isDel?'🗑 삭제':'✏️ 수정';
+      const color=isNew?'#111':isDel?'#c00':'#999';
+      const badge=isNew?'🆕 신규 등록':isDel?'🗑 삭제':' ✏️ 업데이트';
       const name=c.name_ko||c.product||'—';
-      const nameEn=c.name_en?` · ${c.name_en}`:'';
+      const nameEn=c.name_en?` (${c.name_en})`:'';
       const date=c.changed_at||c.date||'';
       const dateStr=date?new Date(date).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-      const isLatest=idx===0;
-      return `<div class="nit" style="${isLatest?'background:#f0fdf4;border-left:3px solid #1a7a4a;padding-left:13px':''}">
+      return `<div class="nit">
         <div class="nid" style="background:${color}"></div>
-        <div style="flex:1">
-          <div class="nit2">
-            <span style="display:inline-block;background:${color};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-right:6px;letter-spacing:.03em">${badge}</span>${name}${nameEn}
-          </div>
-          <div class="nid2" style="margin-top:3px">
-            ${isLatest?`<span style="color:#1a7a4a;font-weight:700;font-size:11px">최신 업데이트</span>`:''}
+        <div>
+          <div class="nit2">${name}${nameEn}</div>
+          <div class="nid2" style="display:flex;gap:6px;align-items:center">
+            <span style="font-weight:700;color:${color}">${badge}</span>
             <span>${dateStr}</span>
           </div>
         </div>
       </div>`;
     }).join('')
     :'<div class="nemp">업데이트 없음</div>';
-}
-function openQuickView(){
-  isQuickMode=true;isCmpMode=false;isBrandMode=false;cur=null;
-  document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
-  document.getElementById('cmpBtn').classList.remove('active');
-  document.getElementById('brandBtn').classList.remove('active');
-  document.getElementById('quickBtn').classList.remove('active');
-  document.getElementById('quickBtn').classList.add('active');
-  document.getElementById('emptyState').style.display='none';
-  renderQuickView('qna');
-  document.getElementById('sheet').classList.add('open');
-}
-
-function renderQuickView(tab){
-  const ps=Object.values(P);
-  const tabs=['qna','plan','size'];
-  const tabLabels={qna:'Q&A 모음',plan:'기획 의도',size:'사이즈 모음'};
-
-  const tabHtml=`<div class="tabs" style="margin-bottom:28px">
-    ${tabs.map(t=>`<div class="tab${tab===t?' active':''}" onclick="renderQuickView('${t}')">${tabLabels[t]}</div>`).join('')}
-  </div>`;
-
-  let bodyHtml='';
-
-  if(tab==='qna'){
-    bodyHtml=ps.map(p=>{
-      const qnas=(p.qna||[]).filter(q=>q&&q.q);
-      if(!qnas.length) return '';
-      return `<div style="margin-bottom:32px">
-        <div style="font-size:13px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--black);margin-bottom:16px">${p._name} <span style="font-weight:400;color:var(--g4)">${p._nameEn}</span></div>
-        ${qnas.map(q=>`
-          <div style="padding:16px 20px;border:1px solid var(--g2);margin-bottom:8px;background:var(--white)">
-            <div style="font-size:14px;font-weight:700;margin-bottom:8px">Q. ${q.q}</div>
-            ${q.a?`<div style="font-size:13px;color:var(--g5);line-height:1.8;padding-top:10px;border-top:1px solid var(--g2)">${q.a}</div>`:''}
-          </div>`).join('')}
-      </div>`;
-    }).join('');
-    if(!bodyHtml.trim()) bodyHtml='<div style="color:var(--g4);padding:32px;text-align:center">Q&A 데이터 없음</div>';
-  }
-
-  if(tab==='plan'){
-    bodyHtml=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
-      ${ps.map(p=>{
-        if(!p.planHead&&!p.planBody) return '';
-        return `<div style="background:var(--white);border:1px solid var(--g2);padding:20px 24px;border-left:3px solid var(--black)">
-          <div style="font-size:11px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">${p._series}</div>
-          <div style="font-size:16px;font-weight:800;margin-bottom:12px">${p._name}</div>
-          ${p.planHead?`<div style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:10px;line-height:1.6">${p.planHead}</div>`:''}
-          ${p.planBody?`<div style="font-size:13px;color:var(--g5);line-height:1.9">${p.planBody}</div>`:''}
-        </div>`;
-      }).join('')}
-    </div>`;
-  }
-
-  if(tab==='size'){
-    bodyHtml=`<div style="overflow-x:auto;border:1px solid var(--g2)">
-      <table style="width:100%;border-collapse:collapse;min-width:500px;background:var(--white)">
-        <thead>
-          <tr style="background:var(--black)">
-            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">제품명</th>
-            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">시리즈</th>
-            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">경도</th>
-            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">규격</th>
-            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">높이</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${ps.map((p,idx)=>{
-            const sizes=p._sizes;
-            if(!sizes.length) return `<tr style="border-bottom:1px solid var(--g2)"><td style="padding:12px 16px;font-weight:700">${p._name}</td><td style="padding:12px 16px;color:var(--g4)">${p._series}</td><td style="padding:12px 16px;color:var(--g4)">${p.softness||'—'}</td><td colspan="2" style="padding:12px 16px;color:var(--g4)">정보 없음</td></tr>`;
-            return sizes.map((s,si)=>`
-              <tr style="border-bottom:1px solid var(--g2);background:${idx%2===0?'var(--white)':'var(--g1)'}">
-                ${si===0?`<td style="padding:12px 16px;font-weight:700;vertical-align:top" rowspan="${sizes.length}">${p._name}</td><td style="padding:12px 16px;color:var(--g4);vertical-align:top" rowspan="${sizes.length}">${p._series}</td><td style="padding:12px 16px;vertical-align:top" rowspan="${sizes.length}">${p.softness||'—'}</td>`:''}
-                <td style="padding:12px 16px;font-weight:600">${s.name}</td>
-                <td style="padding:12px 16px;color:var(--g5);font-size:13px">${s.w&&s.d?s.w+' × '+s.d+' mm':'—'}${s.h?' / H '+s.h+' mm':''}</td>
-              </tr>`).join('');
-          }).join('')}
-        </tbody>
-      </table>
-    </div>`;
-  }
-
-  document.getElementById('si').innerHTML=`
-    <div style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em">빠른 조회</div>
-    <div style="font-size:13px;color:#999;margin-bottom:24px">전 제품 Q&A · 기획의도 · 사이즈를 한눈에</div>
-    ${tabHtml}
-    ${bodyHtml}
-    <div class="bot-btns">
-      <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button>
-    </div>`;
 }
 
 function openBrandView(){
@@ -996,232 +981,113 @@ function openBrandView(){
 }
 
 function renderBrandView(){
-  const brandTabsHtml = `
-    <div class="brand-tabs">
-      <div class="brand-tab active" onclick="showBrandTab('overview',this);return false">브랜드 개요</div>
-      <div class="brand-tab" onclick="showBrandTab('cert',this);return false">인증 비교</div>
-      <div class="brand-tab" onclick="showBrandTab('simmons',this);return false">시몬스 1:1 비교</div>
-      <div class="brand-tab" onclick="showBrandTab('spring',this);return false">스프링 소재 분석</div>
-      <div class="brand-tab" onclick="showBrandTab('material',this);return false">소재 설명</div>
-    </div>`;
+  const brandTabsHtml=`<div class="brand-tabs">
+    <div class="brand-tab active" onclick="showBrandTab('overview',this);return false">브랜드 개요</div>
+    <div class="brand-tab" onclick="showBrandTab('cert',this);return false">인증 비교</div>
+    <div class="brand-tab" onclick="showBrandTab('simmons',this);return false">시몬스 1:1 비교</div>
+    <div class="brand-tab" onclick="showBrandTab('spring',this);return false">스프링 소재 분석</div>
+    <div class="brand-tab" onclick="showBrandTab('material',this);return false">소재 설명</div>
+  </div>`;
 
-  // 브랜드 개요 탭
-  const overviewHtml = `
-    <div class="brand-tc active" id="btc-overview">
-      <div class="brand-section">
-        <div class="brand-section-title">🏷 브랜드 비교 <span style="font-size:13px;font-weight:500;color:var(--g4)">우리는 누구와 경쟁하고 있을까?</span></div>
-        <div class="brand-section-desc">고객이 직접 비교 문의했을 때, 경쟁사 장단점 제대로 알고 대응하기</div>
-        <div class="brand-table-wrap">
-          <table class="brand-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th>시몬스</th>
-                <th>에이스/씰리</th>
-                <th>템퍼</th>
-                <th>베스트슬립/브랜드리스</th>
-                <th>한샘/까사미아/슬립퍼</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>지향점</td><td>프리미엄</td><td>가성비</td><td>기술력</td><td>거품 없다/진정성</td><td>디자인</td></tr>
-              <tr><td>페인포인트</td><td class="pain">품질 대비 가격</td><td class="pain">본넬 스프링의 한계</td><td class="pain">호불호 강한 폼 물성</td><td class="pain">강조하는 소재 대비 적은 사용량</td><td class="pain">다양성 대비 부족한 제품력</td></tr>
-              <tr><td>비교 대응</td><td style="text-align:left;font-size:11px;line-height:1.8">"시몬스 보고 오셨어요? 실제로 제품 퀄리티도 좋은 편이에요. 단 상담을 해보면 고객님 체형·수면 습관을 세세하게 보지 않고 일부 인기 모델 중심으로 안내되는 경우가 많아요. 저희는 더 세밀하게 비교해 보시는 게 좋아요."</td><td style="text-align:left;font-size:11px;line-height:1.8">"고객님, 딱딱하다고 허리에 좋은 건 아니에요. 본넬 스프링 체험하실 때, 모서리 부분 앉아보세요. 구조상 반대편 끝까지 바로 흔들립니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"평소에 더워 많이 타시면 폼만으로 만든 매트리스는 조금 힘들 수 있어요. 템퍼 폼은 특히 온도에 민감해서 계절마다 쿠션감 차이가 많이 납니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"소재 자체는 잘 쓰는 편인데, 실제로 제품 내부를 보면 강조하는 소재 대비 사용량이 적은 경우가 있어요. 실물 구조를 꼭 비교해보시면 좋습니다."</td><td style="text-align:left;font-size:11px;line-height:1.8">"지금은 어디에 누워도 편안할지 몰라도 1-2년만 지나도 상황이 바뀔 수 있어요. 장기 투자 관점으로 보셔야 후회가 없습니다."</td></tr>
-            </tbody>
-          </table>
-        </div>
+  const overviewHtml=`<div id="btc-overview">
+    <div class="brand-section">
+      <div class="brand-section-title">브랜드 비교 · 우리는 누구와 경쟁하고 있을까?</div>
+      <div class="brand-section-desc">고객이 직접 비교 문의했을 때, 경쟁사 장단점 제대로 알고 대응하기</div>
+      <div class="brand-table-wrap"><table class="brand-table">
+        <thead><tr><th>구분</th><th>시몬스</th><th>에이스/씰리</th><th>템퍼</th><th>베스트슬립/브랜드리스</th><th>한샘/까사미아/슬립퍼</th></tr></thead>
+        <tbody>
+          <tr><td>지향점</td><td>프리미엄</td><td>가성비</td><td>기술력</td><td>거품 없다/진정성</td><td>디자인</td></tr>
+          <tr><td>페인포인트</td><td class="pain">품질 대비 가격</td><td class="pain">본넬 스프링의 한계</td><td class="pain">호불호 강한 폼 물성</td><td class="pain">강조하는 소재 대비 적은 사용량</td><td class="pain">다양성 대비 부족한 제품력</td></tr>
+          <tr><td>비교 대응</td>
+            <td style="text-align:left;font-size:13px;line-height:1.8">"시몬스 보고 오셨어요? 실제로 제품 퀄리티도 좋은 편이에요. 단 상담을 해보면 고객님 체형·수면 습관을 세세하게 보지 않고 일부 인기 모델 중심으로 안내되는 경우가 많아요. 저희는 더 세밀하게 비교해 보시는 게 좋아요."</td>
+            <td style="text-align:left;font-size:13px;line-height:1.8">"본넬 스프링 체험하실 때, 모서리 부분 앉아보세요. 구조상 반대편 끝까지 바로 흔들립니다."</td>
+            <td style="text-align:left;font-size:13px;line-height:1.8">"평소에 더워 많이 타시면 폼만으로 만든 매트리스는 조금 힘들 수 있어요. 계절마다 쿠션감 차이가 많이 납니다."</td>
+            <td style="text-align:left;font-size:13px;line-height:1.8">"소재 자체는 잘 쓰는 편인데, 실제로 제품 내부를 보면 강조하는 소재 대비 사용량이 적은 경우가 있어요."</td>
+            <td style="text-align:left;font-size:13px;line-height:1.8">"장기 투자 관점으로 보셔야 후회가 없습니다."</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  const certHtml=`<div id="btc-cert" style="display:none">
+    <div class="brand-section">
+      <div class="brand-section-title">인증 비교</div>
+      <div class="brand-table-wrap"><table class="brand-table">
+        <thead><tr><th>구분</th><th class="slou">슬로우베드</th><th>시몬스/N32</th><th>에이스</th><th>씰리</th><th>템퍼</th><th>베스트슬립/브랜드리스</th><th>한샘</th></tr></thead>
+        <tbody>
+          <tr class="sub-head"><td colspan="8">인증 — 라돈토론</td></tr>
+          <tr><td>라돈토론</td><td class="slou-val">KOTITI 방사성 안전 인증 (국가 공인)</td><td>KSA 라돈토론 (국가 공인 X)</td><td>KSA 라돈토론 (현재 미진행)</td><td>-</td><td>-</td><td>환경부 권고 수치 준수 (인증 X)</td><td>-</td></tr>
+          <tr class="sub-head"><td colspan="8">인증 — 유해성</td></tr>
+          <tr><td>유해성</td><td class="slou-val">그린가드 GOLD + 새니타이즈</td><td>난연·친환경 환경 표지 인증</td><td>친환경 환경 표지 인증</td><td>-</td><td>OEKO-TEX® MADE IN GREEN</td><td>대한아토피협회 추천마크</td><td>기본 유해 물질 검사만</td></tr>
+          <tr class="sub-head"><td colspan="8">품질 보증</td></tr>
+          <tr><td>스프링</td><td class="slou-val">완제품 5년 통합 보증</td><td>15년</td><td>15~20년</td><td>5~10년</td><td>-</td><td>10~25년</td><td>15년</td></tr>
+          <tr><td>폼+패딩</td><td class="slou-val">완제품 5년 통합 보증</td><td>-</td><td class="pain">3년</td><td>-</td><td class="pain">10년</td><td class="pain">1년</td><td class="pain">별도 공지 X</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  const simmonsHtml=`<div id="btc-simmons" style="display:none">
+    <div class="brand-section">
+      <div class="brand-section-title">시몬스 vs 슬로우베드 1:1 비교</div>
+      <div class="brand-table-wrap"><table class="brand-table">
+        <thead><tr><th>구분</th><th>마르코니</th><th>지젤</th><th>윌리엄</th><th>켈리(최고가)</th><th class="slou">하프문</th><th class="slou">뉴문</th><th class="slou">선셋</th></tr></thead>
+        <tbody>
+          <tr><td>SS 가격</td><td>187만원</td><td>274만원</td><td>395만원</td><td class="pain">1,779만원</td><td class="slou-val">156만원</td><td class="slou-val">165만원</td><td class="slou-val">263만원</td></tr>
+          <tr><td>K 가격</td><td>303만원</td><td>446만원</td><td>642만원</td><td class="pain">2,890만원</td><td class="slou-val">240만원</td><td class="slou-val">249만원</td><td class="slou-val">353만원</td></tr>
+          <tr><td>높이</td><td class="pain">27cm</td><td>33cm</td><td>34cm</td><td>47cm</td><td class="slou-val">34cm</td><td class="slou-val">34cm</td><td class="slou-val">39cm</td></tr>
+          <tr><td>스프링 소재</td><td colspan="2">바나듐 포켓</td><td>바나듐 포켓</td><td>바나듐 블랙케이블 + 마이크로포켓</td><td class="slou-val" colspan="2">302H 스테인리스 포켓</td><td class="slou-val">미니포켓 스테인리스 + 302H 스테인리스</td></tr>
+          <tr><td>스프링 두께</td><td>2mm</td><td>2mm</td><td>2mm</td><td>2mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td></tr>
+          <tr><td>조닝</td><td>-</td><td>-</td><td>MPS 시스템</td><td>-</td><td class="slou-val" colspan="3">WAS 7 ZONE</td></tr>
+          <tr><td>패딩</td><td colspan="2">맥시멈 세이프티 난연</td><td>퓨어울 + 맥시멈</td><td>소프트 알파카 + 맥시멈</td><td class="slou-val" colspan="3">스마트셀 소취 + 울트라리사이클 + 새니타이즈항균</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  const springHtml=`<div id="btc-spring" style="display:none">
+    <div class="brand-section">
+      <div class="brand-section-title">스프링 소재 비교 분석</div>
+      <div class="brand-section-desc">매트리스는 오래 써야 하니까, 여러 성능이 균형 잡힌 소재가 더 안정적이죠!</div>
+      <div class="brand-table-wrap"><table class="brand-table">
+        <thead><tr><th>분류</th><th class="slou">슬로우베드</th><th>시몬스</th><th>한샘</th><th>브랜드리스</th><th>에이스</th><th>씰리</th></tr></thead>
+        <tbody>
+          <tr><td>소재</td><td class="slou-val">302H 스테인레스</td><td>바나듐 합금강선</td><td>오일 템퍼선 강선</td><td>경강선(고탄소강선)</td><td>황동 도금 강선</td><td>티타늄 도금 강선</td></tr>
+          <tr><td>내식성</td><td class="slou-val">5.0 ★</td><td class="pain">1.5</td><td class="pain">1.5</td><td class="pain">1.5</td><td>3.0</td><td>3.5</td></tr>
+          <tr><td>피로수명</td><td>3.5</td><td>5.0 ★</td><td class="pain">2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr>
+          <tr><td>탄성</td><td>3.0</td><td>5.0 ★</td><td>4.0</td><td>4.5</td><td>4.5</td><td>4.5</td></tr>
+          <tr><td>소음</td><td class="slou-val">5.0 ★</td><td class="pain">2.5</td><td class="pain">2.0</td><td class="pain">2.5</td><td>3.5</td><td>4.0</td></tr>
+          <tr><td>종합</td>
+            <td class="slou-val" style="text-align:left;font-size:13px">✓ 내식성·소음 1위<br>✓ 장기 안정성 우수<br><strong>고급 프리미엄 소재</strong></td>
+            <td style="text-align:left;font-size:13px">✓ 탄성 최고<br>❌ 내식성 최저<br>❌ 소음 가능성↑</td>
+            <td style="text-align:left;font-size:13px">✓ 가성비<br>❌ 피로수명 낮음</td>
+            <td style="text-align:left;font-size:13px">✓ 탄성 우수<br>❌ 내식성 매우 낮음</td>
+            <td style="text-align:left;font-size:13px">✓ 도금 보완<br>❌ 도금 마모 가능</td>
+            <td style="text-align:left;font-size:13px">✓ 탄성 강함<br>❌ 도금 마모 가능</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  const materialHtml=`<div id="btc-material" style="display:none">
+    <div class="brand-section">
+      <div class="brand-section-title">소재 상세 설명</div>
+      <div class="brand-section-desc">슬로우베드(SLOU BED) 핵심 소재의 특징과 고객 효능</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+        <button class="mat-btn active" onclick="setMatCat('전체',this)" style="padding:9px 20px;border:1px solid var(--g2);background:var(--black);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s">전체 보기</button>
+        <button class="mat-btn" onclick="setMatCat('스프링',this)" style="padding:9px 20px;border:1px solid var(--g2);background:var(--white);color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s">스프링</button>
+        <button class="mat-btn" onclick="setMatCat('폼',this)" style="padding:9px 20px;border:1px solid var(--g2);background:var(--white);color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s">폼</button>
+        <button class="mat-btn" onclick="setMatCat('패딩',this)" style="padding:9px 20px;border:1px solid var(--g2);background:var(--white);color:var(--black);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s">패딩</button>
       </div>
-    </div>`;
+      <div class="material-grid" id="material-grid-wrap"></div>
+    </div>
+  </div>`;
 
-  // 인증 비교 탭
-  const certHtml = `
-    <div class="brand-tc" id="btc-cert">
-      <div class="brand-section">
-        <div class="brand-section-title">🏅 인증 비교</div>
-        <div class="brand-table-wrap">
-          <table class="brand-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th class="slou">슬로우베드</th>
-                <th>시몬스/N32</th>
-                <th>에이스</th>
-                <th>씰리</th>
-                <th>템퍼</th>
-                <th>베스트슬립/브랜드리스</th>
-                <th>한샘</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="sub-head"><td colspan="8">인증 — 라돈토론</td></tr>
-              <tr>
-                <td>라돈토론</td>
-                <td class="slou-val">KOTITI 방사성 안전 인증 (국가 공인)</td>
-                <td>KSA 라돈토론 안전 제품 인증 (국가 공인 X)</td>
-                <td>KSA 라돈토론 안전 제품 인증 (국가 공인 X) - 현재 미진행</td>
-                <td>-</td>
-                <td>-</td>
-                <td>환경부 권고 수치 준수 (인증 X)</td>
-                <td>-</td>
-              </tr>
-              <tr class="sub-head"><td colspan="8">인증 — 유해성</td></tr>
-              <tr>
-                <td>유해성</td>
-                <td class="slou-val">그린가드 GOLD + 새니타이즈</td>
-                <td>난연·친환경 환경 표지 인증 / N32 비건·동물복지·더마테스트</td>
-                <td>친환경 환경 표지 인증</td>
-                <td>-</td>
-                <td>OEKO-TEX® MADE IN GREEN</td>
-                <td>대한아토피협회 추천마크</td>
-                <td>기본 유해 물질 검사만 진행</td>
-              </tr>
-              <tr class="sub-head"><td colspan="8">품질 보증</td></tr>
-              <tr>
-                <td>스프링</td>
-                <td class="slou-val">완제품 5년 (스프링+폼+패딩 전체)</td>
-                <td>15년</td>
-                <td>15~20년 (품목별 상이)</td>
-                <td>5~10년 (품목별 상이)</td>
-                <td>-</td>
-                <td>베스트슬립 10~25년 / 브랜드리스 10~15년</td>
-                <td>15년 (포시즌 5,6,7만 해당)</td>
-              </tr>
-              <tr>
-                <td>폼+패딩</td>
-                <td class="slou-val">완제품 5년 통합 보증</td>
-                <td>-</td>
-                <td class="pain">3년</td>
-                <td>-</td>
-                <td class="pain">10년</td>
-                <td class="pain">1년</td>
-                <td class="pain">별도 공지 X</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-
-  // 시몬스 1:1 비교 탭
-  const simmonsHtml = `
-    <div class="brand-tc" id="btc-simmons">
-      <div class="brand-section">
-        <div class="brand-section-title">⚔️ 시몬스 vs 슬로우베드 1:1 비교</div>
-        <div class="brand-table-wrap">
-          <table class="brand-table">
-            <thead>
-              <tr>
-                <th>구분</th>
-                <th>마르코니</th>
-                <th>지젤</th>
-                <th>윌리엄</th>
-                <th>켈리 (최고가)</th>
-                <th class="slou">하프문</th>
-                <th class="slou">뉴문</th>
-                <th class="slou">선셋</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="sub-head"><td colspan="8">— 시몬스 —</td></tr>
-              <tr><td>SS 가격</td><td>187만원</td><td>274만원</td><td>395만원</td><td class="pain">1779만원</td><td class="slou-val">156만원</td><td class="slou-val">165만원</td><td class="slou-val">263만원</td></tr>
-              <tr><td>K 가격</td><td>303만원</td><td>446만원</td><td>642만원</td><td class="pain">2890만원</td><td class="slou-val">240만원</td><td class="slou-val">249만원</td><td class="slou-val">353만원</td></tr>
-              <tr><td>높이</td><td class="pain">27cm</td><td>33cm</td><td>34cm</td><td>47cm</td><td class="slou-val">34cm</td><td class="slou-val">34cm</td><td class="slou-val">39cm</td></tr>
-              <tr><td>스프링 소재</td><td colspan="2">바나듐 포켓</td><td>바나듐 포켓</td><td>바나듐 블랙케이블 마이크로포켓스프링</td><td class="slou-val" colspan="2">302H 스테인리스 포켓</td><td class="slou-val">미니포켓스프링 스테인리스 + 302H 스테인리스 포켓</td></tr>
-              <tr><td>스프링 두께</td><td>2mm</td><td>2mm</td><td>2mm</td><td>2mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td><td class="slou-val">2.15mm</td></tr>
-              <tr><td>조닝</td><td>-</td><td>-</td><td>MPS 시스템</td><td>-</td><td class="slou-val" colspan="3">WAS 7 ZONE</td></tr>
-              <tr><td>패딩</td><td colspan="2">맥시멈 세이프티 난연</td><td>퓨어울 맥시멈 세이프티 난연</td><td>소프트 알파카 맥시멈 세이프티 난연</td><td class="slou-val" colspan="3">스마트셀 소취 + 울트라리사이클 온도통기 + 새니타이즈항균</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-
-  // 스프링 소재 분석 탭
-  const springHtml = `
-    <div class="brand-tc" id="btc-spring">
-      <div class="brand-section">
-        <div class="brand-section-title">🔩 스프링 소재 비교 분석 <span style="font-size:13px;font-weight:500;color:var(--g4)">스프링은 탄탄한게 최고 아닌가?</span></div>
-        <div class="brand-section-desc">매트리스는 오래 써야 하니까, 여러 성능이 균형 잡힌 소재가 더 안정적이죠!</div>
-        <div class="brand-table-wrap">
-          <table class="brand-table">
-            <thead>
-              <tr>
-                <th>분류</th>
-                <th class="slou">슬로우베드</th>
-                <th>시몬스</th>
-                <th>한샘</th>
-                <th>브랜드리스</th>
-                <th>에이스</th>
-                <th>씰리</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>소재</td><td class="slou-val">302H 스테인레스</td><td>바나듐 합금강선</td><td>오일 템퍼선 강선</td><td>경강선(고탄소강선)</td><td>황동 도금 강선</td><td>티타늄 도금 강선</td></tr>
-              <tr><td>내식성 (부식·녹 발생 저항)</td><td class="slou-val">5.0</td><td class="pain">1.5</td><td class="pain">1.5</td><td class="pain">1.5</td><td>3.0</td><td>3.5</td></tr>
-              <tr><td>피로수명 (반복하중에서의 내구성)</td><td>3.5</td><td>5.0</td><td class="pain">2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr>
-              <tr><td>탄성 (항복강도·인장강도 기반 반발력)</td><td>3.0</td><td>5.0</td><td>4.0</td><td>4.5</td><td>4.5</td><td>4.5</td></tr>
-              <tr><td>소음 (마찰음·삐걱거림 발생 가능성)</td><td class="slou-val">5.0</td><td class="pain">2.5</td><td class="pain">2.0</td><td class="pain">2.5</td><td>3.5</td><td>4.0</td></tr>
-              <tr><td>종합 진단</td>
-                <td class="slou-val" style="text-align:left;font-size:11px">✓ 내식성·위생성·소음 절대적 1위<br>✓ 장기 안정성 우수<br>✓ 편안한 반발력<br><strong>조용한 체감 품질에 최적화된 고급·프리미엄 소재</strong></td>
-                <td style="text-align:left;font-size:11px">✓ 탄성·반발력 최고<br>✓ 피로수명 우수<br>❌ 내식성 최저(녹·마모 리스크 큼)<br>❌ 소음 가능성↑</td>
-                <td style="text-align:left;font-size:11px">✓ 초기 탄성·강도 준수<br>✓ 가성비 우수<br>❌ 피로수명 낮음(장기 내구성 편차)<br>❌ 내식성 낮아 녹·소음 발생 가능</td>
-                <td style="text-align:left;font-size:11px">✓ 탄성·반발력 우수<br>✓ 표준적이고 익숙한 스프링 감각<br>❌ 내식성 매우 낮음<br>❌ 소음·산화 가능성 큼</td>
-                <td style="text-align:left;font-size:11px">✓ 도금으로 부식 성능 보완<br>✓ 탄성·내구성 준수<br>❌ 도금층 마모·변색 가능성<br>❌ 도금 품질 따라 성능 편차 큼</td>
-                <td style="text-align:left;font-size:11px">✓ 도금으로 내식·접속성 개선<br>✓ 탄성·반발력 강함(고탄소강 기반)<br>❌ 도금층 마모·변색 가능성<br>❌ '티타늄 합금이 아닌 Ti 도금' 강도 향상은 제한적</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>`;
-
-  // 소재 설명 탭
-  let activeMaterialCat = '전체';
-  const materialCats = ['전체', '스프링', '폼', '패딩'];
-  const catColors = {'스프링':'#1a4ed8','폼':'#1a7a4a','패딩':'#b91c1c'};
-
-  function renderMaterialGrid(){
-    const filtered = activeMaterialCat === '전체' ? materialData : materialData.filter(m=>m.cat===activeMaterialCat);
-    const el = document.getElementById('material-grid-wrap');
-    if(!el) return;
-    el.innerHTML = filtered.map(m=>`
-      <div class="material-card">
-        <div class="mc-cat" style="color:${catColors[m.cat]||'#888'};font-weight:800">${m.cat}</div>
-        <div class="mc-name">${m.name}</div>
-        <div class="mc-feature">${m.feature}</div>
-        <div class="mc-effect">💬 ${m.effect}</div>
-      </div>`).join('');
-  }
-
-  const filterBtnStyle = (active) => `padding:9px 20px;border:1px solid var(--g2);background:${active?'var(--black)':'var(--white)'};color:${active?'#fff':'var(--black)'};font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;letter-spacing:.04em;transition:all .2s`;
-
-  const materialHtml = `
-    <div id="btc-material" style="display:none">
-      <div class="brand-section">
-        <div class="brand-section-title">소재 상세 설명</div>
-        <div class="brand-section-desc">슬로우베드(SLOU BED) 핵심 소재의 특징과 고객 효능</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px" id="mat-filter-row">
-          <button class="mat-btn active" onclick="setMatCat('전체',this)" style="${filterBtnStyle(true)}">전체 보기</button>
-          <button class="mat-btn" onclick="setMatCat('스프링',this)" style="${filterBtnStyle(false)}">스프링</button>
-          <button class="mat-btn" onclick="setMatCat('폼',this)" style="${filterBtnStyle(false)}">폼</button>
-          <button class="mat-btn" onclick="setMatCat('패딩',this)" style="${filterBtnStyle(false)}">패딩</button>
-        </div>
-        <div class="material-grid" id="material-grid-wrap"></div>
-      </div>
-    </div>`;
-
-  function setMatCat(cat, el){
-    activeMaterialCat = cat;
-    document.querySelectorAll('.mat-btn').forEach(b=>{
-      b.style.background='var(--white)';b.style.color='var(--black)';
-    });
-    el.style.background='var(--black)';el.style.color='#fff';
-    renderMaterialGrid();
-  }
-
-  document.getElementById('si').innerHTML = `
-    <div style="font-size:24px;font-weight:900;margin-bottom:4px;letter-spacing:-.02em">브랜드 비교</div>
-    <div style="font-size:13px;color:#999;margin-bottom:20px">경쟁사 분석 · 소재 비교 · 대응 가이드</div>
+  document.getElementById('si').innerHTML=`
+    <div style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em">브랜드 비교</div>
+    <div style="font-size:13px;color:#999;margin-bottom:24px">경쟁사 분석 · 소재 비교 · 대응 가이드</div>
     ${brandTabsHtml}
     <div id="brand-tab-content">
       ${overviewHtml}
@@ -1230,21 +1096,24 @@ function renderBrandView(){
       ${springHtml}
       ${materialHtml}
     </div>
-    <div class="bot-btns" style="margin-top:16px">
-      <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록</button>
+    <div class="bot-btns">
+      <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button>
     </div>`;
 }
 
 function showBrandTab(name, el){
-  const scrollPos = document.getElementById('sheet').scrollTop;
+  const sheet=document.getElementById('sheet');
+  const savedScroll=sheet?sheet.scrollTop:0;
   document.querySelectorAll('.brand-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
-  document.querySelectorAll('#brand-tab-content>div').forEach(t=>t.style.display='none');
+  // brand-tab-content 직접 자식만 숨기기
+  const content=document.getElementById('brand-tab-content');
+  if(content) Array.from(content.children).forEach(c=>c.style.display='none');
   const tc=document.getElementById('btc-'+name);
   if(tc) tc.style.display='block';
   if(name==='material') renderMaterialGrid();
-  // 스크롤 위치 유지
-  requestAnimationFrame(()=>document.getElementById('sheet').scrollTop=scrollPos);
+  // 스크롤 복원
+  requestAnimationFrame(()=>{if(sheet) sheet.scrollTop=savedScroll;});
 }
 
 // ── 소재 필터 전역 ──
@@ -1286,10 +1155,217 @@ function setMatCat(cat, btn){
   renderMaterialGrid();
 }
 
+// 페이지 포커스 시 즉시 재연결
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden && fetchFailCount > 0) fetchAll();
+});
+window.addEventListener('focus', ()=>{
+  if(fetchFailCount > 0) fetchAll();
+});
+
+// ── 빠른 조회 ──
+let isQuickMode=false;
+function openQuickView(){
+  isQuickMode=true;isCmpMode=false;isBrandMode=false;cur=null;
+  document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
+  ['cmpBtn','brandBtn','quoteBtn'].forEach(id=>{document.getElementById(id)?.classList.remove('active');});
+  document.getElementById('quickBtn').classList.add('active');
+  document.getElementById('emptyState').style.display='none';
+  renderQuickView('qna');
+  document.getElementById('sheet').classList.add('open');
+}
+
+function renderQuickView(tab){
+  const ps=Object.values(P);
+  const tabs=['qna','plan','size'];
+  const tabLabels={qna:'Q&A 모음',plan:'기획 의도',size:'사이즈 모음'};
+  const tabHtml=`<div class="tabs" style="margin-bottom:28px">${tabs.map(t=>`<div class="tab${tab===t?' active':''}" onclick="renderQuickView('${t}')">${tabLabels[t]}</div>`).join('')}</div>`;
+  let bodyHtml='';
+  if(tab==='qna'){
+    bodyHtml=ps.map(p=>{
+      const qnas=(p.qna||[]).filter(q=>q&&q.q);
+      if(!qnas.length)return'';
+      return`<div style="margin-bottom:28px">
+        <div style="font-size:12px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--black);margin-bottom:14px">${p._name} <span style="font-weight:400">${p._nameEn}</span></div>
+        ${qnas.map(q=>`<div style="padding:14px 18px;border:1px solid var(--g2);margin-bottom:8px;background:var(--white)">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px">Q. ${q.q}</div>
+          ${q.a?`<div style="font-size:13px;color:var(--g5);line-height:1.8;padding-top:10px;border-top:1px solid var(--g2)">${q.a}</div>`:''}</div>`).join('')}
+      </div>`;
+    }).join('')||'<div style="color:var(--g4);padding:32px;text-align:center">Q&A 데이터 없음</div>';
+  }
+  if(tab==='plan'){
+    bodyHtml=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
+      ${ps.filter(p=>p.planHead||p.planBody).map(p=>`<div style="background:var(--white);border:1px solid var(--g2);padding:20px 24px;border-left:3px solid var(--black)">
+        <div style="font-size:10px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">${p._series}</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:12px">${p._name}</div>
+        ${p.planHead?`<div style="font-size:14px;font-weight:700;margin-bottom:10px;line-height:1.6">${p.planHead}</div>`:''}
+        ${p.planBody?`<div style="font-size:13px;color:var(--g5);line-height:1.9">${p.planBody}</div>`:''}
+      </div>`).join('')}
+    </div>`;
+  }
+  if(tab==='size'){
+    bodyHtml=`<div style="overflow-x:auto;border:1px solid var(--g2)">
+      <table style="width:100%;border-collapse:collapse;min-width:500px;background:var(--white)">
+        <thead><tr style="background:var(--black)">
+          <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff">제품명</th>
+          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">시리즈</th>
+          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">경도</th>
+          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">규격</th>
+          <th style="padding:12px 16px;font-size:12px;font-weight:700;color:#fff">사이즈</th>
+        </tr></thead>
+        <tbody>${ps.map((p,pi)=>p._sizes.map((s,si)=>`
+          <tr style="border-bottom:1px solid var(--g2);background:${pi%2===0?'var(--white)':'var(--g1)'}">
+            ${si===0?`<td style="padding:12px 16px;font-weight:700;vertical-align:top" rowspan="${p._sizes.length}">${p._name}</td>
+            <td style="padding:12px 16px;color:var(--g4);vertical-align:top" rowspan="${p._sizes.length}">${p._series}</td>
+            <td style="padding:12px 16px;vertical-align:top" rowspan="${p._sizes.length}">${p.softness||'—'}</td>`:''}
+            <td style="padding:12px 16px;font-weight:600">${s.name}</td>
+            <td style="padding:12px 16px;color:var(--g5);font-size:13px">${s.w&&s.d?s.w+' × '+s.d+' mm':'—'}${s.h?' / H '+s.h+' mm':''}</td>
+          </tr>`).join('')).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+  document.getElementById('si').innerHTML=`
+    <div style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em">빠른 조회</div>
+    <div style="font-size:13px;color:#999;margin-bottom:24px">전 제품 Q&A · 기획의도 · 사이즈를 한눈에</div>
+    ${tabHtml}${bodyHtml}
+    <div class="bot-btns"><button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button></div>`;
+}
+
+// ── 견적서 ──
+let quoteItems=[];
+let quoteDiscount=20;
+let quoteCustomer={name:'',phone:'',store:'',staff:''};
+const QUOTE_COLORS=['아이보리','그레이','베이지','화이트','블랙','네이비','라이트노체','다크노체'];
+
+function openQuoteView(){
+  isQuickMode=false;isCmpMode=false;isBrandMode=false;cur=null;
+  document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
+  ['cmpBtn','brandBtn','quickBtn'].forEach(id=>{document.getElementById(id)?.classList.remove('active');});
+  document.getElementById('quoteBtn').classList.add('active');
+  document.getElementById('emptyState').style.display='none';
+  if(!quoteItems.length) quoteItems=[{name:'',size:'',color:'',price:'',qty:1}];
+  renderQuoteView();
+  document.getElementById('sheet').classList.add('open');
+}
+
+function addQuoteItem(){quoteItems.push({name:'',size:'',color:'',price:'',qty:1});renderQuoteView();}
+function removeQuoteItem(idx){if(quoteItems.length<=1)return;quoteItems.splice(idx,1);renderQuoteView();}
+
+function updateQuoteItem(idx,field,val){
+  quoteItems[idx][field]=val;
+  if(field==='name'){quoteItems[idx].size='';quoteItems[idx].color='';renderQuoteView();return;}
+  if(field==='size'){document.querySelectorAll(`#q-size-${idx} .q-toggle-btn`).forEach(b=>b.classList.toggle('on',b.textContent.trim()===val));}
+  if(field==='color'){document.querySelectorAll(`#q-color-${idx} .q-toggle-btn`).forEach(b=>b.classList.toggle('on',b.textContent.trim()===val));}
+  updateQuoteCalc();
+}
+
+function updateQuoteCalc(){
+  const disc=parseFloat(document.getElementById('q-disc')?.value||quoteDiscount)||0;
+  quoteDiscount=disc;
+  let totalOrigin=0,totalSale=0;
+  quoteItems.forEach((item,idx)=>{
+    const price=parseInt((item.price||'').toString().replace(/[^0-9]/g,''))||0;
+    const qty=parseInt(item.qty)||1;
+    const origin=price*qty;
+    const discAmt=Math.round(origin*(disc/100));
+    const sale=origin-discAmt;
+    totalOrigin+=origin;totalSale+=sale;
+    const sEl=document.getElementById('q-sale-'+idx);if(sEl)sEl.textContent=sale?sale.toLocaleString()+'원':'—';
+    const dEl=document.getElementById('q-disc-'+idx);if(dEl)dEl.textContent=discAmt?discAmt.toLocaleString()+'원':'—';
+  });
+  const saved=totalOrigin-totalSale;
+  const rEl=document.getElementById('q-result');
+  if(rEl)rEl.innerHTML=`
+    <div><div class="quote-result-label">소비자가 합계</div><div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.6)">${totalOrigin.toLocaleString()}원</div></div>
+    <div style="text-align:center"><div class="quote-result-label">할인율</div><div class="quote-result-val">${disc}%</div></div>
+    <div style="text-align:right"><div class="quote-result-label">최종 판매가</div><div class="quote-result-val">${totalSale.toLocaleString()}원</div><div class="quote-result-save">↓ ${saved.toLocaleString()}원 절약</div></div>`;
+}
+
+function renderQuoteView(){
+  const today=new Date().toLocaleDateString('ko-KR');
+  const productOpts=Object.values(P).map(p=>`<option value="${p._name}">${p._name}</option>`).join('');
+  const rows=quoteItems.map((item,idx)=>{
+    const price=parseInt((item.price||'').toString().replace(/[^0-9]/g,''))||0;
+    const qty=parseInt(item.qty)||1;
+    const matchP=Object.values(P).find(pp=>pp._name===item.name);
+    const sizes=matchP?matchP._sizes:[];
+    const sizeHtml=sizes.length
+      ?`<div class="q-toggle-group" id="q-size-${idx}">${sizes.map(s=>`<button class="q-toggle-btn${item.size===s.name?' on':''}" onclick="updateQuoteItem(${idx},'size','${s.name}')">${s.name}</button>`).join('')}</div>`
+      :`<input type="text" value="${item.size||''}" placeholder="직접입력" onchange="updateQuoteItem(${idx},'size',this.value)" style="border:none;border-bottom:1px solid var(--g2);font-size:13px;font-family:'Noto Sans KR',sans-serif;width:80px;outline:none">`;
+    const colorHtml=`<div class="q-toggle-group" id="q-color-${idx}">${QUOTE_COLORS.map(c=>`<button class="q-toggle-btn${item.color===c?' on':''}" onclick="updateQuoteItem(${idx},'color','${c}')">${c}</button>`).join('')}</div>
+    <input type="text" value="${!QUOTE_COLORS.includes(item.color)&&item.color?item.color:''}" placeholder="기타 직접입력" onchange="updateQuoteItem(${idx},'color',this.value)" style="border:none;border-bottom:1px solid var(--g2);font-size:12px;font-family:'Noto Sans KR',sans-serif;width:100px;outline:none;margin-top:4px;color:var(--g4)">`;
+    return `<tr>
+      <td class="left" style="min-width:150px">
+        <select onchange="updateQuoteItem(${idx},'name',this.value)" style="border:none;border-bottom:1px solid var(--g2);background:transparent;font-size:13px;font-family:'Noto Sans KR',sans-serif;width:100%;outline:none;cursor:pointer;padding:4px 0">
+          <option value="">— 제품 선택 —</option>${productOpts}
+        </select>
+        <script>document.currentScript.previousElementSibling.value='${item.name||""}';<\/script>
+      </td>
+      <td style="min-width:120px">${sizeHtml}</td>
+      <td style="min-width:220px">${colorHtml}</td>
+      <td style="white-space:nowrap"><input type="text" value="${item.price||''}" placeholder="0" oninput="updateQuoteItem(${idx},'price',this.value)" style="width:85px;text-align:right;border:none;border-bottom:1px solid var(--g2);font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none">원</td>
+      <td><input type="number" value="${qty}" min="1" onchange="updateQuoteItem(${idx},'qty',this.value)" style="width:44px;border:none;border-bottom:1px solid var(--g2);font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;text-align:center"></td>
+      <td style="white-space:nowrap">${price*qty?(price*qty).toLocaleString()+'원':'—'}</td>
+      <td id="q-disc-${idx}" style="white-space:nowrap">—</td>
+      <td id="q-sale-${idx}" style="font-weight:700;white-space:nowrap">—</td>
+      <td><button onclick="removeQuoteItem(${idx})" style="border:none;background:none;color:var(--g4);font-size:18px;cursor:pointer;padding:0 6px">×</button></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('si').innerHTML=`
+    <div class="quote-wrap">
+      <div class="quote-header"><div class="quote-brand">SLOU BED</div><div class="quote-title">견 적 서</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;font-size:13px">
+        <div style="display:flex;gap:8px;align-items:center"><span style="font-weight:700;white-space:nowrap">매장명</span><input type="text" placeholder="매장명" value="${quoteCustomer.store||''}" oninput="quoteCustomer.store=this.value" style="flex:1;border:none;border-bottom:1px solid var(--g2);padding:4px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none"></div>
+        <div style="display:flex;gap:8px;align-items:center"><span style="font-weight:700;white-space:nowrap">담당자</span><input type="text" placeholder="이름" value="${quoteCustomer.staff||''}" oninput="quoteCustomer.staff=this.value" style="flex:1;border:none;border-bottom:1px solid var(--g2);padding:4px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none"></div>
+        <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end"><span style="font-weight:700">견적일</span><span>${today}</span></div>
+      </div>
+      <div style="border:1px solid var(--g2);padding:14px 18px;margin-bottom:16px;background:var(--g1)">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g4);margin-bottom:10px">고객 정보</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="display:flex;gap:8px;align-items:center;font-size:13px"><span style="font-weight:700;min-width:36px">성명</span><input type="text" placeholder="고객명" value="${quoteCustomer.name||''}" oninput="quoteCustomer.name=this.value" style="flex:1;border:none;border-bottom:1px solid var(--g2);padding:4px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;background:transparent"></div>
+          <div style="display:flex;gap:8px;align-items:center;font-size:13px"><span style="font-weight:700;min-width:36px">연락처</span><input type="text" placeholder="010-0000-0000" value="${quoteCustomer.phone||''}" oninput="quoteCustomer.phone=this.value" style="flex:1;border:none;border-bottom:1px solid var(--g2);padding:4px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;background:transparent"></div>
+        </div>
+      </div>
+      <div class="quote-section-title">구매 상품</div>
+      <div style="overflow-x:auto"><table class="quote-table">
+        <thead><tr>
+          <th style="text-align:left;min-width:150px">제품명</th><th>사이즈</th><th>색상</th>
+          <th>소비자가</th><th>수량</th><th>소비자가(합계)</th><th>할인금액</th><th>판매가</th><th style="width:30px"></th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      <button class="quote-add-btn" onclick="addQuoteItem()">+ 상품 추가</button>
+      <div class="quote-discount-box">
+        <label>할인율 (%)</label>
+        <input type="number" id="q-disc" value="${quoteDiscount}" min="0" max="100" oninput="quoteDiscount=this.value;updateQuoteCalc()">
+        <span style="font-size:13px;color:var(--g4)">% 적용 시 자동 계산</span>
+        <button onclick="updateQuoteCalc()" style="padding:8px 18px;background:var(--black);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">계산</button>
+      </div>
+      <div class="quote-result-box" id="q-result">
+        <div><div class="quote-result-label">소비자가 합계</div><div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.6)">—</div></div>
+        <div style="text-align:center"><div class="quote-result-label">할인율</div><div class="quote-result-val">${quoteDiscount}%</div></div>
+        <div style="text-align:right"><div class="quote-result-label">최종 판매가</div><div class="quote-result-val">—</div></div>
+      </div>
+      <div style="border:1px solid var(--g2);padding:14px 18px;background:var(--g1);margin-bottom:16px">
+        <div style="font-weight:700;margin-bottom:6px;font-size:13px">비고</div>
+        <textarea placeholder="특이사항 입력..." style="width:100%;border:none;background:transparent;font-size:13px;font-family:'Noto Sans KR',sans-serif;resize:none;height:60px;outline:none;line-height:1.8"></textarea>
+      </div>
+      <button class="quote-print-btn" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+      <div style="text-align:center;font-size:11px;color:var(--g4);margin-top:12px;letter-spacing:.06em">SLOU BED · sloubed.com</div>
+    </div>
+    <div class="bot-btns"><button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button></div>`;
+  setTimeout(updateQuoteCalc, 50);
+}
+
+// 페이지 포커스 시 재연결
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&fetchFailCount>0)fetchAll();});
+window.addEventListener('focus',()=>{if(typeof fetchFailCount!=='undefined'&&fetchFailCount>0)fetchAll();});
+
 function toggleNotif(){document.getElementById('npanel').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('#notifBtn')&&!e.target.closest('#npanel'))document.getElementById('npanel').classList.remove('open');});
 
-fetchAll().then(()=>setInterval(fetchAll,5000));
+fetchAll(); // 스마트 폴링 - fetchAll 내부에서 schedulePoll 호출
 
 </script>
 </body>
