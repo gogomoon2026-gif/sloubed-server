@@ -68,7 +68,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 
 /* ── SIDEBAR ── */
 .sb{
-  width:var(--sidebar);flex-shrink:0;
+  width:280px;flex-shrink:0;
   background:var(--white);
   border-right:1px solid var(--g2);
   height:calc(100vh - var(--header));
@@ -91,12 +91,20 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .sb-divider{height:1px;background:var(--g2);margin:4px 0}
 .sb-list{flex:1;padding:8px 12px 24px;overflow-y:auto}
 .sb-group-lbl{
-  font-size:10px;font-weight:700;color:var(--g4);
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:16px 4px 8px;
-  border-bottom:1px solid var(--g2);margin-bottom:6px;
+  font-size:11px;font-weight:800;color:var(--black);
+  letter-spacing:.04em;
+  padding:10px 12px;margin:0 -12px;
+  border-bottom:1px solid var(--g2);
+  background:var(--g1);
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;
+  transition:background .15s;
 }
-.sb-group-lbl:first-child{padding-top:8px}
+.sb-group-lbl:hover{background:var(--g2)}
+.sb-group-lbl .toggle-arrow{font-size:10px;color:var(--g4);transition:transform .2s}
+.sb-group-lbl.collapsed .toggle-arrow{transform:rotate(-90deg)}
+.sb-group-body{overflow:hidden;transition:max-height .25s ease}
+.sb-group-body.collapsed{max-height:0!important}
 .pc{
   padding:12px 10px;border-radius:var(--radius);
   cursor:pointer;transition:var(--transition);
@@ -125,7 +133,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 /* ── SHEET ── */
 .sheet{
   position:fixed;top:var(--header);right:0;bottom:0;
-  width:calc(100% - var(--sidebar));
+  width:calc(100% - 280px);
   background:var(--white);overflow-y:auto;
   transform:translateX(100%);
   transition:transform .32s cubic-bezier(.4,0,.2,1);z-index:100;
@@ -366,6 +374,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .diff-red{font-weight:700;color:var(--red)}
 
 /* ── NOTIF PANEL ── */
+@keyframes bellRing{0%{transform:rotate(0)}20%{transform:rotate(-15deg)}40%{transform:rotate(15deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(10deg)}100%{transform:rotate(0)}}
+.bell-ring{animation:bellRing .5s ease 2!important}
+
 .npanel{
   position:fixed;top:64px;right:16px;z-index:300;
   width:320px;background:var(--white);
@@ -476,6 +487,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
     <div class="sb-top">
       <button class="sb-action-btn" id="cmpBtn" onclick="openCmpView()">제품 비교</button>
       <button class="sb-action-btn" id="brandBtn" onclick="openBrandView()">브랜드 비교</button>
+      <button class="sb-action-btn" id="quickBtn" onclick="openQuickView()">📋 빠른 조회</button>
     </div>
     <div class="sb-divider"></div>
     <div class="sb-list" id="sbList"><div class="sb-empty">연결 중...</div></div>
@@ -561,6 +573,7 @@ async function fetchAll(){
     if(cur&&P[cur]) renderDetail(cur);
     else if(isCmpMode) renderCmp();
     else if(isBrandMode) renderBrandView();
+    else if(isQuickMode) renderQuickView('qna');
   } catch{
     setSS('off');
     document.getElementById('sbList').innerHTML='<div class="sb-empty">서버 연결 실패<br><br>npm start 실행 확인</div>';
@@ -581,17 +594,29 @@ function renderSB(){
   ps.forEach(p=>{const g=p._series||'기타';if(!groups[g])groups[g]=[];groups[g].push(p);});
   let h='',gi=0;
   Object.entries(groups).forEach(([grp,items])=>{
-    h+=`<div class="sb-sec"><div class="sb-lbl">${grp}</div>`;
+    const gid='grp_'+gi;
+    h+=`<div class="sb-group-lbl" onclick="toggleSBGroup('${gid}',this)">
+      <span>${grp}</span><span class="toggle-arrow">▼</span>
+    </div>
+    <div class="sb-group-body" id="${gid}" style="max-height:800px">`;
     items.forEach((p,i)=>{
-      const b=p.status==='new'?`<span class="bnew">New</span>`:p.status==='updated'?`<span class="bupd">Upd</span>`:'';
-      h+=`<div class="pc ${cur===p.id&&!isCmpMode?'active':''}" id="pc-${p.id}" onclick="selectP('${p.id}')">
-        <div class="pnum" style="background:${BADGE_COLORS[(gi+i)%BADGE_COLORS.length]}">${String(i+1).padStart(2,'0')}</div>
+      h+=`<div class="pc ${cur===p.id&&!isCmpMode&&!isBrandMode?' active':''}" id="pc-${p.id}" onclick="selectP('${p.id}')">
         <div class="pname">${p._name}</div>
-        <div class="psub">${p._nameEn||p._series||''}</div>
-        ${b}</div>`;
-    }); h+=`</div>`; gi+=items.length;
+        <div class="psub">${p._nameEn||p.softness||''}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+    gi+=items.length;
   });
   document.getElementById('sbList').innerHTML=h;
+}
+
+function toggleSBGroup(id,lbl){
+  const body=document.getElementById(id);
+  if(!body) return;
+  const collapsed=body.classList.contains('collapsed');
+  if(collapsed){body.classList.remove('collapsed');body.style.maxHeight='800px';lbl.classList.remove('collapsed');}
+  else{body.classList.add('collapsed');lbl.classList.add('collapsed');}
 }
 
 function selectP(id){
@@ -829,32 +854,135 @@ function applyAdd(){
 }
 document.getElementById('prodModal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
 
+let lastNotifIds = new Set();
+
 function renderNotif(){
-  const items=CL.slice(0,10);
+  const items=CL.slice(0,20);
+  // 새 항목 감지
+  const currentIds=new Set(items.map(c=>c.product_id+c.changed_at));
+  const hasNew=[...currentIds].some(id=>!lastNotifIds.has(id)) && lastNotifIds.size>0;
+  if(hasNew){
+    const bell=document.getElementById('notifBtn');
+    bell.classList.add('bell-ring');
+    setTimeout(()=>bell.classList.remove('bell-ring'),1500);
+  }
+  lastNotifIds=currentIds;
   document.getElementById('ndot').style.display=items.length?'block':'none';
   document.getElementById('nitems').innerHTML=items.length
-    ?items.map(c=>{
+    ?items.map((c,idx)=>{
       const isNew=c.change_type==='CREATE'||c.type==='new';
-      const isUpdate=c.change_type==='UPDATE'||c.type==='updated';
       const isDel=c.change_type==='DELETE';
-      const color=isNew?'#111':isDel?'#c00':'#999';
-      const badge=isNew?'🆕 신규 등록':isDel?'🗑 삭제':' ✏️ 업데이트';
+      const color=isNew?'#1a7a4a':isDel?'#b91c1c':'#1a4ed8';
+      const badge=isNew?'🆕 신규':isDel?'🗑 삭제':'✏️ 수정';
       const name=c.name_ko||c.product||'—';
-      const nameEn=c.name_en?` (${c.name_en})`:'';
+      const nameEn=c.name_en?` · ${c.name_en}`:'';
       const date=c.changed_at||c.date||'';
       const dateStr=date?new Date(date).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-      return `<div class="nit">
+      const isLatest=idx===0;
+      return `<div class="nit" style="${isLatest?'background:#f0fdf4;border-left:3px solid #1a7a4a;padding-left:13px':''}">
         <div class="nid" style="background:${color}"></div>
-        <div>
-          <div class="nit2">${name}${nameEn}</div>
-          <div class="nid2" style="display:flex;gap:6px;align-items:center">
-            <span style="font-weight:700;color:${color}">${badge}</span>
+        <div style="flex:1">
+          <div class="nit2">
+            <span style="display:inline-block;background:${color};color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-right:6px;letter-spacing:.03em">${badge}</span>${name}${nameEn}
+          </div>
+          <div class="nid2" style="margin-top:3px">
+            ${isLatest?`<span style="color:#1a7a4a;font-weight:700;font-size:11px">최신 업데이트</span>`:''}
             <span>${dateStr}</span>
           </div>
         </div>
       </div>`;
     }).join('')
     :'<div class="nemp">업데이트 없음</div>';
+}
+function openQuickView(){
+  isQuickMode=true;isCmpMode=false;isBrandMode=false;cur=null;
+  document.querySelectorAll('.pc').forEach(e=>e.classList.remove('active'));
+  document.getElementById('cmpBtn').classList.remove('active');
+  document.getElementById('brandBtn').classList.remove('active');
+  document.getElementById('quickBtn').classList.remove('active');
+  document.getElementById('quickBtn').classList.add('active');
+  document.getElementById('emptyState').style.display='none';
+  renderQuickView('qna');
+  document.getElementById('sheet').classList.add('open');
+}
+
+function renderQuickView(tab){
+  const ps=Object.values(P);
+  const tabs=['qna','plan','size'];
+  const tabLabels={qna:'Q&A 모음',plan:'기획 의도',size:'사이즈 모음'};
+
+  const tabHtml=`<div class="tabs" style="margin-bottom:28px">
+    ${tabs.map(t=>`<div class="tab${tab===t?' active':''}" onclick="renderQuickView('${t}')">${tabLabels[t]}</div>`).join('')}
+  </div>`;
+
+  let bodyHtml='';
+
+  if(tab==='qna'){
+    bodyHtml=ps.map(p=>{
+      const qnas=(p.qna||[]).filter(q=>q&&q.q);
+      if(!qnas.length) return '';
+      return `<div style="margin-bottom:32px">
+        <div style="font-size:13px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--black);margin-bottom:16px">${p._name} <span style="font-weight:400;color:var(--g4)">${p._nameEn}</span></div>
+        ${qnas.map(q=>`
+          <div style="padding:16px 20px;border:1px solid var(--g2);margin-bottom:8px;background:var(--white)">
+            <div style="font-size:14px;font-weight:700;margin-bottom:8px">Q. ${q.q}</div>
+            ${q.a?`<div style="font-size:13px;color:var(--g5);line-height:1.8;padding-top:10px;border-top:1px solid var(--g2)">${q.a}</div>`:''}
+          </div>`).join('')}
+      </div>`;
+    }).join('');
+    if(!bodyHtml.trim()) bodyHtml='<div style="color:var(--g4);padding:32px;text-align:center">Q&A 데이터 없음</div>';
+  }
+
+  if(tab==='plan'){
+    bodyHtml=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">
+      ${ps.map(p=>{
+        if(!p.planHead&&!p.planBody) return '';
+        return `<div style="background:var(--white);border:1px solid var(--g2);padding:20px 24px;border-left:3px solid var(--black)">
+          <div style="font-size:11px;font-weight:800;color:var(--g4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">${p._series}</div>
+          <div style="font-size:16px;font-weight:800;margin-bottom:12px">${p._name}</div>
+          ${p.planHead?`<div style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:10px;line-height:1.6">${p.planHead}</div>`:''}
+          ${p.planBody?`<div style="font-size:13px;color:var(--g5);line-height:1.9">${p.planBody}</div>`:''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if(tab==='size'){
+    bodyHtml=`<div style="overflow-x:auto;border:1px solid var(--g2)">
+      <table style="width:100%;border-collapse:collapse;min-width:500px;background:var(--white)">
+        <thead>
+          <tr style="background:var(--black)">
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">제품명</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">시리즈</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">경도</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">규격</th>
+            <th style="padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap">높이</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${ps.map((p,idx)=>{
+            const sizes=p._sizes;
+            if(!sizes.length) return `<tr style="border-bottom:1px solid var(--g2)"><td style="padding:12px 16px;font-weight:700">${p._name}</td><td style="padding:12px 16px;color:var(--g4)">${p._series}</td><td style="padding:12px 16px;color:var(--g4)">${p.softness||'—'}</td><td colspan="2" style="padding:12px 16px;color:var(--g4)">정보 없음</td></tr>`;
+            return sizes.map((s,si)=>`
+              <tr style="border-bottom:1px solid var(--g2);background:${idx%2===0?'var(--white)':'var(--g1)'}">
+                ${si===0?`<td style="padding:12px 16px;font-weight:700;vertical-align:top" rowspan="${sizes.length}">${p._name}</td><td style="padding:12px 16px;color:var(--g4);vertical-align:top" rowspan="${sizes.length}">${p._series}</td><td style="padding:12px 16px;vertical-align:top" rowspan="${sizes.length}">${p.softness||'—'}</td>`:''}
+                <td style="padding:12px 16px;font-weight:600">${s.name}</td>
+                <td style="padding:12px 16px;color:var(--g5);font-size:13px">${s.w&&s.d?s.w+' × '+s.d+' mm':'—'}${s.h?' / H '+s.h+' mm':''}</td>
+              </tr>`).join('');
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  document.getElementById('si').innerHTML=`
+    <div style="font-size:28px;font-weight:900;margin-bottom:6px;letter-spacing:-.02em">빠른 조회</div>
+    <div style="font-size:13px;color:#999;margin-bottom:24px">전 제품 Q&A · 기획의도 · 사이즈를 한눈에</div>
+    ${tabHtml}
+    ${bodyHtml}
+    <div class="bot-btns">
+      <button class="bbtn out" onclick="document.getElementById('sheet').classList.remove('open')">← 목록으로</button>
+    </div>`;
 }
 
 function openBrandView(){
@@ -870,11 +998,11 @@ function openBrandView(){
 function renderBrandView(){
   const brandTabsHtml = `
     <div class="brand-tabs">
-      <div class="brand-tab active" onclick="showBrandTab('overview',this)">브랜드 개요</div>
-      <div class="brand-tab" onclick="showBrandTab('cert',this)">인증 비교</div>
-      <div class="brand-tab" onclick="showBrandTab('simmons',this)">시몬스 1:1 비교</div>
-      <div class="brand-tab" onclick="showBrandTab('spring',this)">스프링 소재 분석</div>
-      <div class="brand-tab" onclick="showBrandTab('material',this)">소재 설명</div>
+      <div class="brand-tab active" onclick="showBrandTab('overview',this);return false">브랜드 개요</div>
+      <div class="brand-tab" onclick="showBrandTab('cert',this);return false">인증 비교</div>
+      <div class="brand-tab" onclick="showBrandTab('simmons',this);return false">시몬스 1:1 비교</div>
+      <div class="brand-tab" onclick="showBrandTab('spring',this);return false">스프링 소재 분석</div>
+      <div class="brand-tab" onclick="showBrandTab('material',this);return false">소재 설명</div>
     </div>`;
 
   // 브랜드 개요 탭
@@ -1108,12 +1236,15 @@ function renderBrandView(){
 }
 
 function showBrandTab(name, el){
+  const scrollPos = document.getElementById('sheet').scrollTop;
   document.querySelectorAll('.brand-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('#brand-tab-content>div').forEach(t=>t.style.display='none');
   const tc=document.getElementById('btc-'+name);
   if(tc) tc.style.display='block';
   if(name==='material') renderMaterialGrid();
+  // 스크롤 위치 유지
+  requestAnimationFrame(()=>document.getElementById('sheet').scrollTop=scrollPos);
 }
 
 // ── 소재 필터 전역 ──
