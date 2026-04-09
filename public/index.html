@@ -9,6 +9,7 @@
 :root{
   --black:#0a0a0a;--white:#fff;--off-white:#fafaf8;
   --g1:#f4f4f2;--g2:#e8e8e5;--g3:#c8c8c4;--g4:#8a8a84;--g5:#444440;
+  --navy:#2B2D6E;/* PANTONE 2147c - BEFORE MIDNIGHT */
   --accent:#0a0a0a;--blue:#1a4ed8;--red:#b91c1c;
   --yellow:#FFE500;--mint:#A8FF78;--sky:#78C8FF;--pink:#FF9EFF;--orange:#FFB347;
   --sidebar:260px;--header:60px;
@@ -25,7 +26,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:var(--header);
   background:var(--white);
-  border-bottom:1px solid var(--g2);
+  border-bottom:2px solid var(--navy);
   display:flex;align-items:center;justify-content:space-between;
   padding:0 32px;
 }
@@ -57,11 +58,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid #fff;display:none}
 .adm-btn{
   padding:8px 20px;border-radius:var(--radius);
-  background:var(--black);color:#fff;
+  background:var(--navy);color:#fff;
   font-size:12px;font-weight:700;text-decoration:none;
   letter-spacing:.06em;transition:var(--transition);
 }
-.adm-btn:hover{background:#222}
+.adm-btn:hover{background:#1e2059}
 
 /* ── LAYOUT ── */
 .app{display:flex;padding-top:var(--header);min-height:100vh}
@@ -86,7 +87,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
   font-family:'Noto Sans KR',sans-serif;letter-spacing:.02em;
 }
 .sb-action-btn:hover,.sb-action-btn.active{
-  background:var(--black);color:#fff;border-color:var(--black)
+  background:var(--navy);color:#fff;border-color:var(--navy)
 }
 .sb-divider{height:1px;background:var(--g2);margin:4px 0}
 .sb-list{flex:1;padding:8px 12px 24px;overflow-y:auto}
@@ -103,7 +104,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
   border:1px solid transparent;margin-bottom:4px;
 }
 .pc:hover{background:var(--g1)}
-.pc.active{background:var(--black);border-color:var(--black)}
+.pc.active{background:var(--navy);border-color:var(--navy)}
 .pc.active .pname,.pc.active .psub{color:#fff}
 .pname{font-size:14px;font-weight:700;line-height:1.3;color:var(--black)}
 .psub{font-size:11px;color:var(--g4);margin-top:2px;letter-spacing:.02em}
@@ -135,7 +136,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 
 /* ── HERO ── */
 .hero{
-  background:var(--black);
+  background:var(--navy);
   padding:36px 40px;margin-bottom:32px;
   position:relative;overflow:hidden;
 }
@@ -180,7 +181,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
   letter-spacing:.02em;
 }
 .tab:hover{color:var(--black)}
-.tab.active{color:var(--black);border-bottom-color:var(--black)}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy)}
 .tc{display:none}.tc.active{display:block}
 
 /* ── SECTION LABEL ── */
@@ -282,7 +283,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 /* ── PLAN ── */
 .plan-card{
   background:var(--white);padding:28px 32px;
-  border:1px solid var(--g2);border-left:3px solid var(--black);
+  border:1px solid var(--g2);border-left:3px solid var(--navy);
 }
 .plan-head{
   
@@ -303,8 +304,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 }
 .bbtn.out{background:var(--g1);color:var(--black);border:1px solid var(--g2)}
 .bbtn.out:hover{background:var(--g2)}
-.bbtn.fill{background:var(--black);color:#fff}
-.bbtn.fill:hover{background:#222}
+.bbtn.fill{background:var(--navy);color:#fff}
+.bbtn.fill:hover{background:#1e2059}
 
 /* ── COMPARE ── */
 .cmp-slots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
@@ -350,7 +351,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .fchip.on .fchk::after{opacity:1}
 .ctbl-wrap{overflow-x:auto;border:1px solid var(--g2)}
 .ctbl{width:100%;border-collapse:collapse;background:var(--white);min-width:500px}
-.ctbl thead tr{background:var(--black)}
+.ctbl thead tr{background:var(--navy)}
 .ctbl thead th{padding:14px 18px;text-align:left;font-size:12px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:.04em}
 .ctbl thead th:first-child{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);width:110px}
 .ctbl td{padding:14px 18px;border-bottom:1px solid var(--g2);font-size:14px;line-height:1.7;color:var(--g5);vertical-align:top;white-space:pre-wrap;word-break:break-word}
@@ -400,7 +401,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
   border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:.02em;
 }
 .brand-tab:hover{color:var(--black)}
-.brand-tab.active{color:var(--black);border-bottom-color:var(--black)}
+.brand-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
 .brand-section{margin-bottom:48px}
 .brand-section-title{
   
@@ -508,7 +509,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 .quote-result-label{font-size:13px;color:rgba(255,255,255,.6);font-weight:600}
 .quote-result-val{font-size:22px;font-weight:900;letter-spacing:-.02em}
 .quote-result-save{font-size:13px;color:#86efac;font-weight:700}
-.quote-print-btn{width:100%;padding:14px;background:var(--black);color:#fff;border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:'Noto Sans KR',sans-serif;letter-spacing:.06em;transition:all .2s;margin-bottom:8px}
+.quote-print-btn{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;font-size:14px;font-weight:800;cursor:pointer;font-family:'Noto Sans KR',sans-serif;letter-spacing:.06em;transition:all .2s;margin-bottom:8px}
 .quote-print-btn:hover{background:#222}
 .q-toggle-group{display:flex;flex-wrap:wrap;gap:5px;padding:4px 0}
 .q-toggle-btn{padding:5px 11px;border:1px solid var(--g2);background:var(--white);font-size:12px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .15s;color:var(--black);border-radius:3px}
@@ -524,7 +525,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--off-white);color:var
 <body>
 
 <header class="hd">
-  <div class="logo">Slou Bed</div>
+  <div class="logo">
+    <svg width="34" height="18" viewBox="0 0 34 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:9px;flex-shrink:0">
+      <circle cx="6" cy="9" r="5.5" fill="#2B2D6E"/>
+      <circle cx="20" cy="9" r="8" fill="#2B2D6E"/>
+      <circle cx="24.5" cy="6.5" r="5" fill="#fff"/>
+    </svg>
+    <span style="letter-spacing:.18em;font-weight:700;font-size:16px">SLOU BED</span>
+  </div>
   <div class="hd-right">
     <div class="ss-pill ld" id="sspill" onclick="fetchAll()">
       <div class="ss-dot blink" id="ssd"></div>
